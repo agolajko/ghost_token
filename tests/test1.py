@@ -193,3 +193,11 @@ def mp_inner(inner_tuple):
         return(inner_tuple[2])
     else:
         return(pedersen_hash(inner_tuple[2], inner_tuple[1])+inner_tuple[0])
+
+
+# TODO
+# hash a branch
+# read the patricia.cairo from starkware
+# look for a python implementation of the felt type
+# 
+#  
