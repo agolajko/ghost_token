@@ -7,11 +7,10 @@ from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.math import div
 from starkware.cairo.common.alloc import alloc
 
-const MAX_HEIGHT = 
 
 #we store the path in felts, and as we are going to do division, in multiple felts. lenght gives us the maximal bit that (might) not be 0. path1<path2<...
 struct tree_node:
-	#we are locating nodes in the tree, it takes both height and position. Note for node at height h, position is < 2**(MAX_HEIGHT-H)
+	#we are locating nodes in the tree, it takes both height and position.  
 	member height : felt
 	member position : felt
 	#here we are looking at the values=(l, p, v) at the node.
@@ -79,10 +78,14 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	leaf : tree_node,
 	branch : tree_node*,
 	branch_len : felt,
+	total_len : felt,
 	root_hash : felt):
 	
 	assert leaf.height=0
 	let (final_node : tree_node) = hash_branch_rec(leaf, branch, branch_len, branch_iter)
+
+	let (zeroed_node : tree_node) = empty_join_rec(final_node, total_len-final_node.height)
+
 	let (res) = hash_node(final_node)
 	assert (res==root_hash)
 end
@@ -98,9 +101,9 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	
 	let (join_node : tree_node) = branch[branch_iter]
 	let (zero_node_num : felt) = join_node.height-leaf.height
-	let (zerod_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
+	let (zeroed_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
 	
-	let (new_leaf : tree_node) = hash_branch_rec(zerod_leaf, branch, branch_len, branch_iter+1)
+	let (new_leaf : tree_node) = hash_branch_rec(zeroed_leaf, branch, branch_len, branch_iter+1)
 end
 
 
