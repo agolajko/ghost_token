@@ -199,5 +199,5 @@ def mp_inner(inner_tuple):
 # hash a branch
 # read the patricia.cairo from starkware
 # look for a python implementation of the felt type
-# 
+# run a test with Kalman's cairo code 
 #  
