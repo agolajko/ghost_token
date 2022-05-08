@@ -1,6 +1,6 @@
 %lang starknet
 
-%builtins pedersen range_check
+%builtins pedersen range_check bitwise
 
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin, HashBuiltin
 from starkware.cairo.common.bitwise import bitwise_and, bitwise_xor
@@ -93,43 +93,48 @@ end
 
 #we verify a branch. We do the outer checks here, and the recursive part in verify_branch_rec. 
 
-@view
-func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*}(
+@external
+func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	leaf : tree_node,
 	branch_len : felt,
 	branch : tree_node*,
 	total_len : felt,
 	root_hash : felt):
-	
+ 	alloc_locals
+		
 	assert leaf.height=0
 	# branch iter should start from 0 and not from branch_iter
-	let (final_node : tree_node) = hash_branch_rec(leaf, branch, branch_len, 0)
+	let (local final_node : tree_node) = hash_branch_rec(leaf, branch, branch_len, 0)
 
 	let (zeroed_node : tree_node) = empty_join_rec(final_node, total_len-final_node.height)
 
 	let (res) = hash_node(final_node)
 	assert res=root_hash
+	return ()
 end
 
-func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*}(
+func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	leaf : tree_node,
 	branch : tree_node*,
 	branch_len : felt,
 	branch_iter : felt) -> (res_node : tree_node):
 	
 	alloc_locals
+ 
+	#we should check that that the pointer is evaluated at the correct address	
 	
-	let (join_node : tree_node) = branch[branch_iter]
+	local join_node : tree_node = branch[branch_iter]
 	# whats happening in the line below?
 	# we are iterating through each node in the branch one by one
 
 	# subtract the height of the c node 
-	let (zero_node_num : felt) = join_node.height-leaf.height
+	let zero_node_num : felt = (join_node.height-leaf.height)
 	let (zeroed_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
 	# need to add a condiition for when to end the recursion
 	# when branch_len = branch_iter
 	
 	let (new_leaf : tree_node) = hash_branch_rec(zeroed_leaf, branch, branch_len, branch_iter+1)
-end
+	return (new_leaf)
+	end
 
 
