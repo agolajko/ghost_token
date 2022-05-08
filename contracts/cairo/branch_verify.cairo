@@ -99,7 +99,7 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 	branch_len : felt,
 	branch : tree_node*,
 	total_len : felt,
-	root_hash : felt):
+	root_hash : felt)-> (res:felt):
  	alloc_locals
 		
 	assert leaf.height=0
@@ -110,7 +110,7 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 
 	let (res) = hash_node(final_node)
 	assert res=root_hash
-	return ()
+	return (3)
 end
 
 func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
