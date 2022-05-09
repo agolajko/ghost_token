@@ -18,6 +18,8 @@ from tkinter import W
 from starkware.cairo.lang.vm.crypto import pedersen_hash
 from hashlib import sha256
 from math import log2
+from collections import namedtuple
+
 leaves = [12, 34, 33, 55]
 
 n_leaves = len(leaves)
@@ -241,3 +243,63 @@ def hash_branch(branch_list):
 # also it will be our function that takes the specific Merkle branch from the tree, so wean adopt the  conventions we want
 # (both for picking the merkle branch for a node and for hashing)
 #
+
+
+# store a node value as a named tuple
+
+Node = namedtuple("Node", ["height", "position", "length", "path", "value"])
+
+# test_node = Node(0, 0, 0, 0, 1)
+
+
+def hash_orientation(node_one: Node, node_two: Node):
+    # takes two nodes as defined above as input
+    # checks which one is two the left and which one is on the right
+    # hashes them accordingly
+
+    # get last bit of each node positiion to get parity
+    node_one_position_parity = int(bin(node_one.position)[-1])
+    node_two_position_parity = int(bin(node_two.position)[-1])
+
+    # check the two parities are not the same
+    assert node_one_position_parity != node_two_position_parity
+    # assert height is the same for the two nodes
+    assert node_one.height == node_two.height
+
+    # hash order depending on parity
+
+    if node_one_position_parity:
+        # if node_one is in odd position
+        return mp_hash_named_tuple(node_two_position_parity, node_one_position_parity)
+    else:
+        return mp_hash_named_tuple(node_one_position_parity, node_two_position_parity)
+
+
+def mp_hash_named_tuple(left_tuple: Node, right_tuple: Node):
+    # takes two named tuples as an input
+    # performs the MP hash on them as specified here https://docs.starknet.io/docs/State/starknet-state/
+
+    # if both tuples are all zero return (0,0,0)
+    left_zeros = all(v == 0 for v in left_tuple[2:])
+    right_zeros = all(v == 0 for v in right_tuple[2:])
+
+    # get the height and position of the new hashed node
+
+    new_height = left_tuple.height + 1
+    new_position = int(right_tuple.position / 2)
+
+    if left_zeros and right_zeros:
+        return((new_height, new_position, 0, 0, 0))
+    elif not left_zeros and right_zeros:
+        return((new_height, new_position, left_tuple[0]+1, left_tuple[1], left_tuple[2]))
+    elif left_zeros and not right_zeros:
+        return((new_height, new_position, right_tuple[0]+1, right_tuple[1] + 2**right_tuple[0], right_tuple[2]))
+    else:
+        return((new_height, new_position, 0, 0, pedersen_hash(mp_inner(left_tuple[2:]), mp_inner(right_tuple[2:]))))
+
+
+def mp_inner_tuple(inner_tuple):
+    if inner_tuple[0] == 0:
+        return(inner_tuple[2])
+    else:
+        return(pedersen_hash(inner_tuple[2], inner_tuple[1])+inner_tuple[0])
