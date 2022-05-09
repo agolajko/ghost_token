@@ -31,10 +31,7 @@ func hash_node{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 		return (node.value)	
 	end
 
-	# let (sum_value) = (hash2{hash_ptr=pedersen_ptr}(node.value, node.path) + node.length)
-
 	let (local hash_value) = hash2{hash_ptr=pedersen_ptr}(node.value, node.path)
-	# let (node_value: felt)= (node.length)
 	let node_value= node.length
 	let sum_value = hash_value  + node_value
 	
@@ -42,7 +39,6 @@ func hash_node{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 end
 
 # we join two nodes, and calculate their hash. We check that they are neighbours, and assume neither of them are zero.
-# Todo:  where are the two cases where either are zero handled?
 func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	node1 : tree_node,
 	node2 : tree_node) -> (res_node : tree_node):
@@ -54,7 +50,6 @@ func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	let dif = node2_pos-node1_pos
 	assert dif=1
 
-	# Kalman, will below division guarantee to return the correct value? https://www.cairo-lang.org/docs/how_cairo_works/cairo_intro.html
 	let new_pos = node1.position / 2
 	let new_height = node1.height + 1
 	
@@ -66,7 +61,6 @@ func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 end
 	
 #we join a node with a number of zero nodes. We know the direction from the position of the node.
-# this is a great space saving measure, as there will be many nodes that are zero and we don't want to hash these
 func empty_join_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	leaf : tree_node,
 	iter : felt) -> (final_leaf : tree_node):
@@ -103,7 +97,6 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
  	alloc_locals
 		
 	assert leaf.height=0
-	# branch iter should start from 0 and not from branch_iter
 	let (local final_node : tree_node) = hash_branch_rec(leaf, branch, branch_len, 0)
 
 	let (zeroed_node : tree_node) = empty_join_rec(final_node, total_len-final_node.height)
@@ -124,26 +117,33 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	if branch_iter==branch_len:
 		return (leaf)
 	end	 
-	#we should check that that the pointer is evaluated at the correct address	
-	
 	local join_node : tree_node = branch[branch_iter]
-	# whats happening in the line below?
-	# we are iterating through each node in the branch one by one
 
 	# subtract the height of the current node 
 	let zero_node_num : felt = (join_node.height-leaf.height)
 	let (zeroed_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
 
-	if join_node.height-zeroed_leaf.height==1:
-		let (join_leaf : tree_node)= join_nodes(zeroed_leaf, join_node)	
-	end
-
-	if zeroed_leaf.height-join_node.height==-1:
-			let (join_leaf : tree_node)= join_nodes(join_node, zeroed_leaf)	
-	end
-
+	let (l_leaf : tree_node, r_leaf : tree_node) = decide_higher(zeroed_leaf, join_node)
+	let (join_leaf : tree_node)= join_nodes(l_leaf, r_leaf)
+	
 	let (new_leaf : tree_node) = hash_branch_rec(zeroed_leaf, branch, branch_len, branch_iter+1)
 	return (new_leaf)
 end
 
 
+func decide_higher{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
+	node1 : tree_node,
+	node2 : tree_node) -> (l_node : tree_node, r_node : tree_node):
+	
+	alloc_locals
+	
+	if node1.position-node2.position==1:
+		return (node2, node1)
+	end
+
+	if node1.position-node2.position==-1:
+		return (node1, node2)
+	end
+	assert 0=1
+	return (node1, node2)
+end
