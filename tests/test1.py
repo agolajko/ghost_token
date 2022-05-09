@@ -14,6 +14,7 @@
 #
 #
 
+from tkinter import W
 from starkware.cairo.lang.vm.crypto import pedersen_hash
 from hashlib import sha256
 from math import log2
@@ -185,7 +186,7 @@ def mp_hash(left_tuple, right_tuple):
     elif left_zeros and not right_zeros:
         return((right_tuple[0]+1, right_tuple[1] + 2**right_tuple[0], right_tuple[2]))
     else:
-        return((0,0,pedersen_hash(mp_inner(left_tuple),mp_inner(right_tuple) ) ))
+        return((0, 0, pedersen_hash(mp_inner(left_tuple), mp_inner(right_tuple))))
 
 
 def mp_inner(inner_tuple):
@@ -199,5 +200,44 @@ def mp_inner(inner_tuple):
 # hash a branch
 # read the patricia.cairo from starkware
 # look for a python implementation of the felt type
-# run a test with Kalman's cairo code 
-#  
+# run a test with Kalman's cairo code
+#
+
+
+def hash_branch(branch_list):
+
+    # hash first two together and add their hash to new hashes list
+    # hash third element of branch list with first element of new_hashes
+    # hash fourth element of branch_list with second of new_hashes
+
+    # how will the hashing differ depending on the structure of the branch we are hashing
+
+    new_hashes = []
+
+    # hash first two together
+
+    first_hash = mp_hash(branch_list[0], branch_list[1])
+
+    new_hashes.append(first_hash)
+
+    # loop over the two lists
+    # start hashing the last element of the
+
+    for node in branch_list[2:]:
+        # joint_str = str(str(new_hashes[-1]) + str(node)).encode("ascii")
+        # node_hash = sha256(joint_str).hexdigest()
+
+        # how to load nodes into below hashing function so they are consistant with left, right policy
+        node_hash = mp_hash()
+
+        new_hashes.append(node_hash)
+
+    return(new_hashes)
+
+
+# in order to make the hashing work well for arbitrary branch, need to store the position of each node
+# So when we get a list of nodes they can be sorted into the order we want to hash them in
+# this sorting function will look through the position of each node and put them in order to so they can be fed sequentially to the hashing fn
+# also it will be our function that takes the specific Merkle branch from the tree, so wean adopt the  conventions we want
+# (both for picking the merkle branch for a node and for hashing)
+#

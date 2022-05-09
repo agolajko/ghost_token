@@ -135,6 +135,6 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	
 	let (new_leaf : tree_node) = hash_branch_rec(zeroed_leaf, branch, branch_len, branch_iter+1)
 	return (new_leaf)
-	end
+end
 
 
