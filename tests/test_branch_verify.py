@@ -26,7 +26,7 @@ async def starknet_ins() -> Starknet:
 @pytest.fixture
 async def branch_contract(starknet_ins: Starknet) -> StarknetContract:
     # return await starknet_ins.deploy(source="/home/ago/projects/ghost_token/contracts/cairo/branch_verify.cairo", cairo_path=["contracts"])
-    return await starknet_ins.deploy(source="/home/ago/projects/ghost_token/contracts/cairo/branch_verify.cairo")
+    return await starknet_ins.deploy(source="/home/proj/ghost_token/contracts/cairo/branch_verify.cairo")
 
 
 @pytest.mark.asyncio
