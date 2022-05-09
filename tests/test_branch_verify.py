@@ -35,7 +35,7 @@ async def test_branch(starknet_ins: Starknet, branch_contract: StarknetContract)
     # Invoke test
     print("does this run?")
     leaf1 = (3, 5, 0, 0, 1)
-    branch1 = ((1, 0, 2, 2, 1))
+    branch1 = [(1, 0, 2, 2, 1)]
     total_len1 = 4
     root_hash1 = 1428519069806529925910806899344787140252006517057140074734361523088172087989
     res_hash = await branch_contract.verify_branch(leaf1, branch1, total_len1, root_hash1).call()
