@@ -51,7 +51,7 @@ func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	assert dif=1
 
 	let new_pos = node1.position / 2
-	let new_height = node1.height + 1
+	let new_height = node1.height - 1
 	
 	let (first_hash) = hash_node(node1)
 	let (second_hash) = hash_node(node2)
@@ -78,7 +78,7 @@ func empty_join_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : 
 	let (pow_leaf_len: felt) = pow(2,leaf.length)
 	let new_path = leaf_path + res*pow_leaf_len
 	
-	let new_leaf = tree_node(leaf.height+1, new_pos, leaf.length+1,new_path , leaf.value )
+	let new_leaf = tree_node(leaf.height-1, new_pos, leaf.length+1,new_path , leaf.value )
 	
 	let (final_leaf : tree_node) = empty_join_rec(new_leaf, iter-1)
 
