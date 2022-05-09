@@ -121,25 +121,27 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	
 	alloc_locals
 	
-	if branch_iter==branch_len+1:
+	if branch_iter==branch_len:
 		return (leaf)
-	 
+	end	 
 	#we should check that that the pointer is evaluated at the correct address	
 	
 	local join_node : tree_node = branch[branch_iter]
 	# whats happening in the line below?
 	# we are iterating through each node in the branch one by one
 
-	# subtract the height of the c node 
+	# subtract the height of the current node 
 	let zero_node_num : felt = (join_node.height-leaf.height)
 	let (zeroed_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
-	# need to add a condiition for when to end the recursion
-	# when branch_len = branch_iter
+
 	if join_node.height-zeroed_leaf.height==1:
 		let (join_leaf : tree_node)= join_nodes(zeroed_leaf, join_node)	
+	end
+
 	if zeroed_leaf.height-join_node.height==-1:
 			let (join_leaf : tree_node)= join_nodes(join_node, zeroed_leaf)	
-	
+	end
+
 	let (new_leaf : tree_node) = hash_branch_rec(zeroed_leaf, branch, branch_len, branch_iter+1)
 	return (new_leaf)
 end
