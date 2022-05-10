@@ -102,8 +102,9 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 	let (zeroed_node : tree_node) = empty_join_rec(final_node, total_len-final_node.height)
 
 	let (res) = hash_node(final_node)
-	assert res=root_hash
-	return (3)
+	# assert res=root_hash
+	return (res)
+	# return (3)
 end
 
 func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
