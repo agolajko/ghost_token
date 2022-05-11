@@ -14,7 +14,7 @@ import asyncio
 # from typing import NamedTuple
 
 from starkware.starknet.testing.contract import StarknetContract
-from starkware.starknet.testing.starknet import Starknet
+# from starkware.starknet.testing.starknet import Starknet
 
 
 @pytest.fixture
@@ -44,5 +44,3 @@ async def test_branch(starknet_ins: Starknet, branch_contract: StarknetContract)
     # assert res.res == 3
 
     return()
-
-# Link for Goerli snapshot up to 130k blocks https://drive.google.com/file/d/1nPGSpWWLDTnegTZ8pRih5sVNspCKeBrJ/view
