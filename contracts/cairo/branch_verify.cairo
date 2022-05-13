@@ -23,6 +23,7 @@ struct tree_node:
 end
 
 #we hash a single node, zero or not. 
+@external
 func hash_node{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	node : tree_node ) -> (res : felt):
 	alloc_locals
@@ -32,6 +33,7 @@ func hash_node{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	end
 
 	let (local hash_value) = hash2{hash_ptr=pedersen_ptr}(node.value, node.path)
+	# %{print(ids.hash_value)%}
 	let node_value= node.length
 	let sum_value = hash_value  + node_value
 	
@@ -39,6 +41,7 @@ func hash_node{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 end
 
 # we join two nodes, and calculate their hash. We check that they are neighbours, and assume neither of them are zero.
+@external
 func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	node1 : tree_node,
 	node2 : tree_node) -> (res_node : tree_node):
@@ -61,6 +64,7 @@ func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 end
 	
 #we join a node with a number of zero nodes. We know the direction from the position of the node.
+@external
 func empty_join_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	leaf : tree_node,
 	iter : felt) -> (final_leaf : tree_node):
@@ -76,6 +80,14 @@ func empty_join_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : 
 	let leaf_path = leaf.path
 	let leaf_len= leaf.length
 	let (pow_leaf_len: felt) = pow(2,leaf.length)
+	# %{print(f"height of node {ids.leaf.height}")%}
+	# %{print(f"position of node {ids.leaf.position}")%}
+	# %{print(ids.iter)%}
+	# %{print(ids.iter)%}
+	# %{print(ids.leaf_len)%}
+	# %{print(ids.leaf_path)%}
+	# %{print("pow_leaf_len")%}
+	# %{print(ids.pow_leaf_len)%}
 	let new_path = leaf_path + res*pow_leaf_len
 	
 	let new_leaf = tree_node(leaf.height-1, new_pos, leaf.length+1,new_path , leaf.value )
@@ -87,7 +99,7 @@ end
 
 #we verify a branch. We do the outer checks here, and the recursive part in verify_branch_rec. 
 
-# @external
+@external
 func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	leaf : tree_node,
 	branch_len : felt,
@@ -96,57 +108,83 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 	root_hash : felt)-> (res:felt):
  	alloc_locals
 	
-	%{
-	print("start")
-	%}
+	%{print("start")%}
 	
-	assert leaf.height=total_len-1
-	let (local final_node : tree_node) = hash_branch_rec(leaf, branch, branch_len, 0)
+	assert leaf.height=total_len
+	let (local final_node : tree_node) = hash_branch_rec(leaf,branch_len, branch, 0)
 	
-	%{print(ids.final_node)%}	
+	%{print(ids.final_node.height)%}	
+	%{print(ids.final_node.position)%}	
+	%{print(ids.final_node.length)%}	
+	%{print(ids.final_node.path)%}	
+	%{print(ids.final_node.value)%}	
+	%{print(ids.total_len - ids.final_node.height)%}	
 	
 	let (zeroed_node : tree_node) = empty_join_rec(final_node, total_len-final_node.height)
 	
 	%{print(ids.zeroed_node)%}	
 	
-	let (res) = hash_node(final_node)
-	%{print(ids.res)%}
-	# assert res=root_hash
+	# let (res) = hash_node(final_node)
+	let (res) = hash_node(zeroed_node)
+	# %{print(ids.res)%}
+	assert res=root_hash
 	return (res)
 	# return (3)
 end
 
+@external
 func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	leaf : tree_node,
-	branch : tree_node*,
 	branch_len : felt,
+	branch : tree_node*,
 	branch_iter : felt) -> (res_node : tree_node):
 	
 	alloc_locals
+	
+	%{print("branch_iter")%}
+	%{print(ids.branch_iter)%}
+	%{print("branch_len")%}
+	%{print(ids.branch_len)%}
 	
 	if branch_iter==branch_len:
 		return (leaf)
 	end	 
 	local join_node : tree_node = branch[branch_iter]
-
 	# subtract the height of the current node 
-	let zero_node_num : felt = (join_node.height-leaf.height)
+	let zero_node_num : felt = (leaf.height-join_node.height)
+
+	%{print(f" leaf height {ids.leaf.height}")%}
+	%{print(f" leaf pos {ids.leaf.position}")%}
+	%{print(f" join_node height {ids.join_node.height}")%}
+	%{print(f" join_node pos {ids.join_node.position}")%}
+	%{print("zero_node_num")%}
+	%{print(ids.zero_node_num)%}
 	let (zeroed_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
+	%{print("positions")%}
+	%{print(ids.zeroed_leaf)%}
+	%{print(ids.zeroed_leaf.height)%}
+	%{print(ids.zeroed_leaf.position)%}
+	%{print(ids.join_node.height)%}
+	%{print(ids.join_node.position)%}
 
 	let (l_leaf : tree_node, r_leaf : tree_node) = decide_higher(zeroed_leaf, join_node)
 	let (join_leaf : tree_node)= join_nodes(l_leaf, r_leaf)
+	# %{print(ids.join_leaf)%}
 	
-	let (new_leaf : tree_node) = hash_branch_rec(zeroed_leaf, branch, branch_len, branch_iter+1)
+	let (new_leaf : tree_node) = hash_branch_rec(join_leaf, branch_len, branch, branch_iter+1)
 	return (new_leaf)
 end
 
 
+@external
 func decide_higher{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	node1 : tree_node,
 	node2 : tree_node) -> (l_node : tree_node, r_node : tree_node):
 	
 	alloc_locals
-	
+	%{print("decide_higher")%}	
+	%{print(ids.node1.position)%}	
+	%{print(ids.node2.position)%}	
 	if node1.position-node2.position==1:
 		return (node2, node1)
 	end

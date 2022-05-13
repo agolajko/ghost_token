@@ -344,3 +344,20 @@ test_branch_list2 = [Node(3, 4, 0, 0, 0), Node(
     3, 5, 0, 0, 1), Node(2, 3, 0, 0, 0), Node(1, 0, 2, 2, 1)]
 
 hash_branch_named_tuple(test_branch_list2)
+
+
+# small function that takes large number and divides by 2 if possible or subtracts 1 and divides by 2
+
+stored_nums = []
+
+
+def two_div(big_num: float):
+    stored_nums.append(big_num)
+
+    if big_num == 2:
+        return 2
+
+    if bin(int(big_num))[-1] == "0":
+        return two_div(big_num/2)
+    else:
+        return two_div((big_num - 1)/2)
