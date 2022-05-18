@@ -60,6 +60,11 @@ func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	let (second_hash) = hash_node(node2)
 	let (new_val) = hash2{hash_ptr=pedersen_ptr}(first_hash, second_hash)
 
+	%{print("************************************************************")%}
+	%{print(f"new joined node height: {ids.new_height} ")%}
+	%{print(f"new joined node pos: {ids.new_pos} ")%}
+	%{print(f"new joined node val: {ids.new_val} ")%}
+
 	return (tree_node(new_height, new_pos, 0, 0, new_val))
 end
 	
@@ -120,7 +125,7 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 	%{print(ids.final_node.value)%}	
 	%{print(ids.total_len - ids.final_node.height)%}	
 	
-	let (zeroed_node : tree_node) = empty_join_rec(final_node, total_len-final_node.height)
+	let (zeroed_node : tree_node) = empty_join_rec(final_node, final_node.height)
 	
 	%{print(ids.zeroed_node)%}	
 	
@@ -141,10 +146,10 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	
 	alloc_locals
 	
-	%{print("branch_iter")%}
-	%{print(ids.branch_iter)%}
-	%{print("branch_len")%}
-	%{print(ids.branch_len)%}
+	# %{print("branch_iter")%}
+	# %{print(ids.branch_iter)%}
+	# %{print("branch_len")%}
+	# %{print(ids.branch_len)%}
 	
 	if branch_iter==branch_len:
 		return (leaf)
@@ -152,20 +157,20 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	local join_node : tree_node = branch[branch_iter]
 	# subtract the height of the current node 
 	let zero_node_num : felt = (leaf.height-join_node.height)
-
-	%{print(f" leaf height {ids.leaf.height}")%}
-	%{print(f" leaf pos {ids.leaf.position}")%}
-	%{print(f" join_node height {ids.join_node.height}")%}
-	%{print(f" join_node pos {ids.join_node.position}")%}
-	%{print("zero_node_num")%}
-	%{print(ids.zero_node_num)%}
 	let (zeroed_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
-	%{print("positions")%}
-	%{print(ids.zeroed_leaf)%}
-	%{print(ids.zeroed_leaf.height)%}
-	%{print(ids.zeroed_leaf.position)%}
-	%{print(ids.join_node.height)%}
-	%{print(ids.join_node.position)%}
+
+	# %{print(f" leaf height {ids.leaf.height}")%}
+	# %{print(f" leaf pos {ids.leaf.position}")%}
+	# %{print(f" join_node height {ids.join_node.height}")%}
+	# %{print(f" join_node pos {ids.join_node.position}")%}
+	# %{print("zero_node_num")%}
+	# %{print(ids.zero_node_num)%}
+	# %{print("positions")%}
+	# %{print(ids.zeroed_leaf)%}
+	# %{print(ids.zeroed_leaf.height)%}
+	# %{print(ids.zeroed_leaf.position)%}
+	# %{print(ids.join_node.height)%}
+	# %{print(ids.join_node.position)%}
 
 	let (l_leaf : tree_node, r_leaf : tree_node) = decide_higher(zeroed_leaf, join_node)
 	let (join_leaf : tree_node)= join_nodes(l_leaf, r_leaf)
@@ -182,9 +187,9 @@ func decide_higher{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 	node2 : tree_node) -> (l_node : tree_node, r_node : tree_node):
 	
 	alloc_locals
-	%{print("decide_higher")%}	
-	%{print(ids.node1.position)%}	
-	%{print(ids.node2.position)%}	
+	# %{print("decide_higher")%}	
+	# %{print(ids.node1.position)%}	
+	# %{print(ids.node2.position)%}	
 	if node1.position-node2.position==1:
 		return (node2, node1)
 	end
