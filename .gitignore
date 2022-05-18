@@ -1,0 +1,7 @@
+venv
+.tox
+
+**/__pycache__
+**/**.egg-info
+build
+reports
