@@ -98,5 +98,5 @@ def hash_branch_named_tuple(branch_list):
 
 # test_branch_list2 = [Node(3, 4, 0, 0, 0), Node(
 #     3, 5, 0, 0, 1), Node(2, 3, 0, 0, 0), Node(1, 0, 2, 2, 1)]
-
 # hash_branch_named_tuple(test_branch_list2)
+
