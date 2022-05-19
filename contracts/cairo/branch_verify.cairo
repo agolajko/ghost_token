@@ -200,3 +200,29 @@ func decide_higher{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 	assert 0=1
 	return (node1, node2)
 end
+
+@external
+func verify_both_branches{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
+	leaf : tree_node,
+	branch_low_len : felt,
+	branch_low : tree_node*,
+	total_low_len : felt,
+	root_low_hash : felt, 
+	leaf_hig_pos : felt,
+	contract_hash : felt,
+	branch_high_len : felt,
+	branch_high : tree_node*,
+	total_high_len : felt,
+	root_high_hash : felt):
+ 	alloc_locals
+	
+	verify_branch(leaf, branch_low, total_low_len, root_low_hash)
+	let (local interm_hash1 : felt) = hash2{hash_ptr=pedersen_ptr}(contract_hash, root_low_hash)
+	let (local interm_hash2 : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash1, 0)
+	let (local leaf_high_hash : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash2, 0)
+
+	let (leaf_high : tree_node) = tree_node(total2_len, leaf2_pos, 0, 0, leaf_high_hash )
+	verify_branch(leaf_high, branch_high, total_high_len, root_high_hash)
+		
+	return ()
+end
