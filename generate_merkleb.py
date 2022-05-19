@@ -81,6 +81,7 @@ def generate_proof(block_num : int, contract_address: int, var_name : str, *args
 		#We get the root of the contract
 		for row in cur.execute("SELECT  quote(root), quote(hash) FROM contract_states WHERE quote(state_hash) LIKE '%" + next_hash +"%';"):
 			next_hash = row[0][2:66]
+			storage_root=next_hash
 			other_hash = row[1][2:66]
 			
 			break
@@ -127,4 +128,4 @@ def generate_proof(block_num : int, contract_address: int, var_name : str, *args
 
 		con.close
 
-		return (root_hash, merkleb_high, merkleb_low)
+		return (root_hash, storage_root,  merkleb_high, merkleb_low)
