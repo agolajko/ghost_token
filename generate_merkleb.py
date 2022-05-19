@@ -4,11 +4,11 @@ from starkware.starknet.public.abi import starknet_keccak, get_storage_var_addre
 from starkware.storage.names import generate_unique_key
 import json
 
-con = sqlite3.connect("./mainnet.sqlite")
-
-cur = con.cursor()
-
 def generate_proof(block_num : int, contract_address: int, var_name : str, *args):
+		con = sqlite3.connect("./mainnet.sqlite")
+
+		cur = con.cursor()
+
 
 		#We prepare the Merkle branch
 		merkleb_high=[]
