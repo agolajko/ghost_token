@@ -60,10 +60,10 @@ func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	let (second_hash) = hash_node(node2)
 	let (new_val) = hash2{hash_ptr=pedersen_ptr}(first_hash, second_hash)
 
-	%{print("************************************************************")%}
-	%{print(f"new joined node height: {ids.new_height} ")%}
-	%{print(f"new joined node pos: {ids.new_pos} ")%}
-	%{print(f"new joined node val: {ids.new_val} ")%}
+	# %{print("************************************************************")%}
+	# %{print(f"new joined node height: {ids.new_height} ")%}
+	# %{print(f"new joined node pos: {ids.new_pos} ")%}
+	# %{print(f"new joined node val: {ids.new_val} ")%}
 
 	return (tree_node(new_height, new_pos, 0, 0, new_val))
 end
@@ -113,21 +113,21 @@ func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 	root_hash : felt)-> (res:felt):
  	alloc_locals
 	
-	%{print("start")%}
+	# %{print("start")%}
 	
 	assert leaf.height=total_len
 	let (local final_node : tree_node) = hash_branch_rec(leaf,branch_len, branch, 0)
 	
-	%{print(ids.final_node.height)%}	
-	%{print(ids.final_node.position)%}	
-	%{print(ids.final_node.length)%}	
-	%{print(ids.final_node.path)%}	
-	%{print(ids.final_node.value)%}	
-	%{print(ids.total_len - ids.final_node.height)%}	
+	# %{print(ids.final_node.height)%}	
+	# %{print(ids.final_node.position)%}	
+	# %{print(ids.final_node.length)%}	
+	# %{print(ids.final_node.path)%}	
+	# %{print(ids.final_node.value)%}	
+	# %{print(ids.total_len - ids.final_node.height)%}	
 	
 	let (zeroed_node : tree_node) = empty_join_rec(final_node, final_node.height)
 	
-	%{print(ids.zeroed_node)%}	
+	# %{print(ids.zeroed_node)%}	
 	
 	# let (res) = hash_node(final_node)
 	let (res) = hash_node(zeroed_node)
@@ -163,8 +163,8 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	# %{print(f" leaf pos {ids.leaf.position}")%}
 	# %{print(f" join_node height {ids.join_node.height}")%}
 	# %{print(f" join_node pos {ids.join_node.position}")%}
-	# %{print("zero_node_num")%}
-	# %{print(ids.zero_node_num)%}
+	# # %{print("zero_node_num")%}
+	# # %{print(ids.zero_node_num)%}
 	# %{print("positions")%}
 	# %{print(ids.zeroed_leaf)%}
 	# %{print(ids.zeroed_leaf.height)%}
