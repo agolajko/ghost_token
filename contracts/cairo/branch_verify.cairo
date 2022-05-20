@@ -216,13 +216,13 @@ func verify_both_branches{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_
 	root_high_hash : felt):
  	alloc_locals
 	
-	verify_branch(leaf, branch_low, total_low_len, root_low_hash)
+	verify_branch(leaf,branch_low_len, branch_low, total_low_len, root_low_hash)
 	let (local interm_hash1 : felt) = hash2{hash_ptr=pedersen_ptr}(contract_hash, root_low_hash)
 	let (local interm_hash2 : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash1, 0)
 	let (local leaf_high_hash : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash2, 0)
 
 	let (leaf_high : tree_node) = make_tree_node(total_high_len, contract_address, 0, 0, leaf_high_hash )
-	verify_branch(leaf_high, branch_high, total_high_len, root_high_hash)
+	verify_branch(leaf_high, branch_high_len, branch_high, total_high_len, root_high_hash)
 		
 	return ()
 end
