@@ -221,7 +221,7 @@ func verify_both_branches{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_
 	let (local interm_hash2 : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash1, 0)
 	let (local leaf_high_hash : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash2, 0)
 
-	let (leaf_high : tree_node) = tree_node(total2_len, contract_address, 0, 0, leaf_high_hash )
+	let (leaf_high : tree_node) = tree_node(total_high_len, contract_address, 0, 0, leaf_high_hash )
 	verify_branch(leaf_high, branch_high, total_high_len, root_high_hash)
 		
 	return ()
