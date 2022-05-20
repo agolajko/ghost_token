@@ -53,15 +53,15 @@ def generate_proof(block_num : int, contract_address: int, var_name : str, *args
 					other_hash_path= 0
 					other_hash_length= 0
 				elif len(row[0])==133:
+					#in this case the other_hash itself changes. In the others it does not.
 					other_hash_length = int(row[0][130:132], 16)
 					other_hash_path = int(row[0][66:130], 16) 
 					other_hash=row[0][2:66]
-					#in this case the other_hash itself changes. In the others it does not.
 				else:
 					other_hash_length=0
 					other_hash_path=0
-				if other_hash == ():
-
+				#if other_hash == ():
+					#in this case we are in a leaf, so nothing changes. 	
 				merkleb_high.insert(0, [height, int(b_address[0: height-1]+str(op_bit), 2),other_hash_length , other_hash_path ,  int(str(other_hash), 16)])
 
 			elif len(row[0])== 133:
