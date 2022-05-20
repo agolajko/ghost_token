@@ -235,5 +235,5 @@ func make_tree_node{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : 
 	path: felt,
 	value: felt)->(res: tree_node):
 	alloc_locals
-	return tree_node(height, position, length, path, value)
+	return (tree_node(height, position, length, path, value))
 end
