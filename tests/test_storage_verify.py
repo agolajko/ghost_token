@@ -9,7 +9,6 @@
 # verify contract gives same output as the python output
 
 
-
 import pytest
 import asyncio
 from typing import NamedTuple
@@ -37,11 +36,8 @@ async def factory():
     return await setup()
 
 
-# 
+#
 
-@pytest.mark.asyncio
-async def test_increase(factory):
-    starknet, branch_proofs_contract = factory
-	
-	
-
+# @pytest.mark.asyncio
+# async def test_increase(factory):
+#     starknet, branch_proofs_contract = factory
