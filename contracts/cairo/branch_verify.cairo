@@ -10,6 +10,9 @@ from starkware.cairo.common.pow import pow
 # from starkware.cairo.common.math import div
 from starkware.cairo.common.alloc import alloc
 
+@storage_var
+func variable() -> (res : felt):
+end 
 
 #we store the path in felts, and as we are going to do division, in multiple felts. lenght gives us the maximal bit that (might) not be 0. path1<path2<...
 struct tree_node:
@@ -215,6 +218,8 @@ func verify_both_branches{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_
 	total_high_len : felt,
 	root_high_hash : felt):
  	alloc_locals
+	
+	variable.write(18)
 	
 	verify_branch(leaf,branch_low_len, branch_low, total_low_len, root_low_hash)
 	let (local interm_hash1 : felt) = hash2{hash_ptr=pedersen_ptr}(contract_hash, root_low_hash)
