@@ -126,7 +126,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
         if len(row[0]) == 131:
             # This means we are in a branch we include the opposite hash and location into the branch.We also increase height and path.
             bit = b_key[height_cont]
-
+            op_bit = 1-int(bit)
             if int(bit) == 0:
                 x = row[0][2:66]
                 y = row[0][66:130]
@@ -134,38 +134,49 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
                 y = row[0][2:66]
                 x = row[0][66:130]
             else:
-                breakpoint()
                 assert 0 == 1
 
             height_cont += 1
-            merkleb_low.insert(0, [height_cont, b_key[0: height_cont], y])
+ # we put the other_hash's node into the branch
+            for row in cur.execute("SELECT quote(data) FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
+                # for row in cur.execute("SELECT data FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
+                #    for row in cur.execute("SELECT quote(data) FROM tree_global WHERE quote(hash) LIKE '%" + other_hash+"%';"):
+                print(f"row is {row}")
+                break
+
+            if len(row[0]) == 131:
+                other_hash_path = 0
+                other_hash_length = 0
+            elif len(row[0]) == 133:
+                # in this case the other_hash itself changes. In the others it does not.
+                other_hash_length = int(row[0][130:132], 16)
+                other_hash_path = int(row[0][66:130], 16)
+                other_hash = row[0][2:66]
+            else:
+                other_hash_length = 0
+                other_hash_path = 0
+            # if other_hash == ():
+                # in this case we are in a leaf, so nothing changes.
+            merkleb_low.insert(0, [height_cont, int(b_key[0: height_cont-1]+str(op_bit), 2),
+                                   other_hash_length, other_hash_path,  int(str(other_hash), 16)])
 
         elif len(row[0]) == 133:
             # This means we are in an edge node, we have to increase height and traversedpath, but we don't change the merkle branch. We also check we are on the correct path.
 
-            x = row[0][2: 66]
+            next_hash = row[0][2: 66]
             path_l = '0x' + row[0][130:132]
 
             # sanity check that we are on the correct path. (other option: if this breaks, return 0)
-            print("this branch")
-            # print(f"first number{int(str("0x"+row[0][66:130]), 16) }")
-            print(f"b_key len {len(b_key)}")
-            print(b_key)
-            print(int(path_l, 16))
-            print(
-                f"height_cont {height_cont}, height_cont + int(path_l, 16) {height_cont+int(path_l,16)}")
-            print(b_key[height_cont: height_cont+int(path_l, 16)])
-            # print(int(b_key[height_cont: height_cont+int(path_l, 16)], 2))
-            print(int("0x"+row[0][66:130], 16))
             assert int(
                 "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
             height_cont += int(path_l, 16)
         else:
-            print(row[0])
+
+            merkleb_low.insert(
+                0, [height_cont, int(b_key[0:height_cont], 2), 0, 0, int(next_hash, 16)])
             break
 
     con.close
-    print("hi still run 2")
 
     print(root_hash, storage_root,  merkleb_high, merkleb_low)
     return (root_hash, storage_root,  merkleb_high, merkleb_low)

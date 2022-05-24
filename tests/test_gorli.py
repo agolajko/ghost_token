@@ -127,17 +127,17 @@ async def test_import_branch(test_get_hash: tuple):
                                                           branch_high=merkle_branch_high_tuple,
                                                           total_high_len=total_len, root_high_hash=root_hash).call()
 
-    root_hash, storage_root, merkle_branch_high, merkle_branch_low = generate_proof(block_num=block_number,
-                                                                                    contract_address=contract_address, var_name="variable")
+    # root_hash, storage_root, merkle_branch_high, merkle_branch_low = generate_proof(block_num=block_number,
+    #                                                                                 contract_address=contract_address, var_name="variable")
 
-    merkle_branch_high_tuple = [tuple(i) for i in merkle_branch_high]
-    merkle_branch_low_tuple = [tuple(i) for i in merkle_branch_low[1:]]
-    leaf = merkle_branch_low[0]
-    # first need to call the contract, here storage_var will still be 18
-    assert leaf.value == 18, "Leaf value not 18"
+    # merkle_branch_high_tuple = [tuple(i) for i in merkle_branch_high]
+    # merkle_branch_low_tuple = [tuple(i) for i in merkle_branch_low[1:]]
+    # leaf = merkle_branch_low[0]
+    # # first need to call the contract, here storage_var will still be 18
+    # assert leaf.value == 18, "Leaf value not 18"
 
-    res_hash = await branch_contract.verify_both_branches(leaf=leaf, branch_low=merkle_branch_low_tuple, total_low_len=leaf.height,
-                                                          root_low_hash=storage_root, contract_address=contract_address, contract_hash=contract_hash,
-                                                          branch_high=merkle_branch_high_tuple,
-                                                          total_high_len=total_len, root_high_hash=root_hash).call()
+    # res_hash = await branch_contract.verify_both_branches(leaf=leaf, branch_low=merkle_branch_low_tuple, total_low_len=leaf.height,
+    #                                                       root_low_hash=storage_root, contract_address=contract_address, contract_hash=contract_hash,
+    #                                                       branch_high=merkle_branch_high_tuple,
+    #                                                       total_high_len=total_len, root_high_hash=root_hash).call()
     return()

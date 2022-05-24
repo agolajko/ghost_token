@@ -219,7 +219,7 @@ func verify_both_branches{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_
 	root_high_hash : felt):
  	alloc_locals
 	
-	variable.write(18)
+	# variable.write(18)
 	
 	verify_branch(leaf,branch_low_len, branch_low, total_low_len, root_low_hash)
 	let (local interm_hash1 : felt) = hash2{hash_ptr=pedersen_ptr}(contract_hash, root_low_hash)
