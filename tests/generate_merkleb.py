@@ -149,7 +149,13 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
             # sanity check that we are on the correct path. (other option: if this breaks, return 0)
             print("this branch")
             # print(f"first number{int(str("0x"+row[0][66:130]), 16) }")
-            print(int(b_key[height_cont: height_cont+int(path_l, 16)], 2))
+            print(f"b_key len {len(b_key)}")
+            print(b_key)
+            print(int(path_l, 16))
+            print(
+                f"height_cont {height_cont}, height_cont + int(path_l, 16) {height_cont+int(path_l,16)}")
+            print(b_key[height_cont: height_cont+int(path_l, 16)])
+            # print(int(b_key[height_cont: height_cont+int(path_l, 16)], 2))
             print(int("0x"+row[0][66:130], 16))
             assert int(
                 "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
