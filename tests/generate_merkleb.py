@@ -6,7 +6,7 @@ import json
 
 
 def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
-    con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
+    con = sqlite3.connect("goerli.sqlite")
 
     cur = con.cursor()
     print("hi run")
