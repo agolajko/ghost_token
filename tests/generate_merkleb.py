@@ -103,7 +103,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
         next_hash = row[0][2:66]
         storage_root = next_hash
         other_hash = row[1][2:66]
-
+        breakpoint()
         break
 
     # we calculate the key
@@ -117,8 +117,8 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
 
     # Then go down the path of the storage_trie
     for i in range(251):
-        if i % 50 == 0:
-            print(f"storage_trie path is {i}")
+
+        print(f"storage_trie path is {i}")
         for row in cur.execute("SELECT quote(data) FROM tree_contracts WHERE hash =CAST(X'"+next_hash+"' AS BLOB);"):
             # for row in cur.execute("SELECT data FROM tree_contracts WHERE hash =CAST(X'"+next_hash+"' AS BLOB);"):
             # for row in cur.execute("SELECT quote(data) FROM tree_contracts WHERE quote(hash) LIKE '%" + next_hash+"%';"):
@@ -130,16 +130,16 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
             bit = b_key[height_cont]
             op_bit = 1-int(bit)
             if int(bit) == 0:
-                x = row[0][2:66]
-                y = row[0][66:130]
+                next_hash = row[0][2:66]
+                other_hash = row[0][66:130]
             elif int(bit) == 1:
-                y = row[0][2:66]
-                x = row[0][66:130]
+                other_hash = row[0][2:66]
+                next_hash = row[0][66:130]
             else:
                 assert 0 == 1
 
             height_cont += 1
- # we put the other_hash's node into the branch
+            # we put the other_hash's node into the branch
             for row in cur.execute("SELECT quote(data) FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
                 # for row in cur.execute("SELECT data FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
                 #    for row in cur.execute("SELECT quote(data) FROM tree_global WHERE quote(hash) LIKE '%" + other_hash+"%';"):
@@ -170,7 +170,12 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
             print(f"b_key len {len(b_key)}")
             print(
                 f"height_cont {height_cont} and height_cont+int(path_l,16) {height_cont+int(path_l, 16)}")
+
             # sanity check that we are on the correct path. (other option: if this breaks, return 0)
+<< << << < HEAD
+            assert int(
+                "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
+== == == =
             print(f"lhs {type(row[0][66:130])}")
             print(f"lhs {int(row[0][66:130],16)}")
             # print(f"lhs {int("0x"+row[0][66:130], 16)}")
@@ -178,6 +183,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
 
             assert int(
                 "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
+>>>>>> > c9557f3fd03ada45c6aa15ec87bbf77475f23c68
             height_cont += int(path_l, 16)
         else:
 
@@ -192,7 +198,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
 
 
 def main():
-    con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
+    con = sqlite3.connect("goerli.sqlite")
 
     cur = con.cursor()
     # Then find the latest block root:
