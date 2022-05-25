@@ -27,7 +27,8 @@ async def deploy_verify_contract():
 
     # deploy verifying contract
     deployment_result = await Contract.deploy(
-        client, compilation_source={"contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
+        # client, compilation_source={"contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
+        client, compilation_source={"../contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
     )
 
     accepted = await deployment_result.wait_for_acceptance()
@@ -51,6 +52,8 @@ async def test_get_hash():
     # get the storage_contract info
     storage_contract_address = "0x35572dec96ab362c35139675abc4f1c9d6b15ee29c98fbf3f0390a0f8500afa"
     storage_tx_hash = "0x5750bd4870d80c7f58c3f2e443f54001fa5427f36e3dad4b66a95fcd30874aa"
+    # storage_contract_address = "0x035572dec96ab362c35139675abc4f1c9d6b15ee29c98fbf3f0390a0f8500afa"
+    # storage_tx_hash = "0x507167c1abf2e485f8e58e57aad71b99295875953158e234c339f1cd4a077df"
 
     # get feeder_gateway_client
     retry_config = RetryConfig(n_retries=1)
@@ -99,7 +102,7 @@ async def test_import_branch_suez(test_get_hash: tuple, deploy_verify_contract):
     verify_contract_address = deploy_verify_contract
 
     (block_number, storage_contract_address, contract_hash) = test_get_hash
-    # print(block_number)
+    block_number = 24_444
     branch_contract = await Contract.from_address(verify_contract_address, client)
     print(branch_contract)
 

@@ -6,7 +6,8 @@ import json
 
 
 def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
-    con = sqlite3.connect("goerli.sqlite")
+    # con = sqlite3.connect("goerli.sqlite")
+    con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
 
     cur = con.cursor()
     print("hi run")
@@ -107,8 +108,14 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
 
     # we calculate the key
     # I think this part is correct, I just don't know the names of the storage variables. I will try again on goerli.
+<<<<<<< HEAD
     row=[]
     key = get_storage_var_address(var_name, 1)
+=======
+
+    key = get_storage_var_address(
+        var_name, 1042400286771102661652363919924244740833084544629561888149967508378012757441)
+>>>>>>> c9557f3fd03ada45c6aa15ec87bbf77475f23c68
     b_key = str(bin(key))[2:].rjust(251, "0")
     height_cont = 0
     print("hi still run")
@@ -165,9 +172,21 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
 
             next_hash = row[0][2: 66]
             path_l = '0x' + row[0][130:132]
-
+            print(f"b_key len {len(b_key)}")
+            print(
+                f"height_cont {height_cont} and height_cont+int(path_l,16) {height_cont+int(path_l, 16)}")
             # sanity check that we are on the correct path. (other option: if this breaks, return 0)
+<<<<<<< HEAD
             assert int("0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
+=======
+            print(f"lhs {type(row[0][66:130])}")
+            print(f"lhs {int(row[0][66:130],16)}")
+            # print(f"lhs {int("0x"+row[0][66:130], 16)}")
+            print(f"rhs {int(b_key[height_cont: height_cont+int(path_l, 16)], 2)}")
+
+            assert int(
+                "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
+>>>>>>> c9557f3fd03ada45c6aa15ec87bbf77475f23c68
             height_cont += int(path_l, 16)
         else:
 
