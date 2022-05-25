@@ -27,8 +27,8 @@ async def deploy_verify_contract():
 
     # deploy verifying contract
     deployment_result = await Contract.deploy(
-        # client, compilation_source={"contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
-        client, compilation_source={"../contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
+        client, compilation_source={"contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
+        # client, compilation_source={"../contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
     )
 
     accepted = await deployment_result.wait_for_acceptance()
