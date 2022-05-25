@@ -130,11 +130,11 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
             bit = b_key[height_cont]
             op_bit = 1-int(bit)
             if int(bit) == 0:
-                x = row[0][2:66]
-                y = row[0][66:130]
+                next_hash =  row[0][2:66]
+                other_hash = row[0][66:130]
             elif int(bit) == 1:
-                y = row[0][2:66]
-                x = row[0][66:130]
+                other_hash = row[0][2:66]
+                next_hash = row[0][66:130]
             else:
                 assert 0 == 1
 
