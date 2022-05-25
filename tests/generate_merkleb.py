@@ -7,7 +7,9 @@ import json
 
 def generate_proof(block_num: int, contract_address: int, var_name: str, contract_variables: list):
     # con = sqlite3.connect("goerli.sqlite")
-    con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
+    # con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
+    con = sqlite3.connect(
+        "/mnt/volume_lon1_01/build_pathfinder/pathfinder/goerli.sqlite")
 
     cur = con.cursor()
     print("hi run")
@@ -130,7 +132,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
             bit = b_key[height_cont]
             op_bit = 1-int(bit)
             if int(bit) == 0:
-                next_hash =  row[0][2:66]
+                next_hash = row[0][2:66]
                 other_hash = row[0][66:130]
             elif int(bit) == 1:
                 other_hash = row[0][2:66]
