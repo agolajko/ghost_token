@@ -1,12 +1,9 @@
 import sqlite3
-from starkware.cairo.lang.vm.crypto import pedersen_hash
-from starkware.starknet.public.abi import starknet_keccak, get_storage_var_address
-from starkware.storage.names import generate_unique_key
-import json
+from starkware.starknet.public.abi import get_storage_var_address
 
 
-def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
-    con = sqlite3.connect("goerli.sqlite")
+def generate_proof(db_path: str, block_num: int, contract_address: int, var_name: str, *args):
+    con = sqlite3.connect(db_path)
 
     cur = con.cursor()
     print("hi run")
@@ -108,7 +105,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
     # we calculate the key
     # I think this part is correct, I just don't know the names of the storage variables. I will try again on goerli.
 
-    key = get_storage_var_address(var_name, 1)
+    key = get_storage_var_address(var_name)
     b_key = str(bin(key))[2:].rjust(251, "0")
     height_cont = 0
     print("hi still run")
@@ -180,24 +177,3 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
 
     print(root_hash, storage_root,  merkleb_high, merkleb_low)
     return (root_hash, storage_root,  merkleb_high, merkleb_low)
-
-
-def main():
-    con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
-
-    cur = con.cursor()
-    # Then find the latest block root:
-    for row in cur.execute("SELECT number FROM starknet_blocks ORDER BY number DESC limit 1; "):
-        # print("The root is:")
-        # print(len(row[0]))
-        block_number = row[0]
-    con.close
-
-    contract_address = int(
-        "0x35572dec96ab362c35139675abc4f1c9d6b15ee29c98fbf3f0390a0f8500afa", 16)
-    generate_proof(block_num=block_number,
-                   contract_address=contract_address, var_name="l1GatewayAddress")
-
-
-if __name__ == '__main__':
-    main()
