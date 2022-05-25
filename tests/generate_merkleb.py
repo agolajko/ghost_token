@@ -102,12 +102,12 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
         next_hash = row[0][2:66]
         storage_root = next_hash
         other_hash = row[1][2:66]
-
+        breakpoint()
         break
 
     # we calculate the key
     # I think this part is correct, I just don't know the names of the storage variables. I will try again on goerli.
-
+    row=[]
     key = get_storage_var_address(var_name, 1)
     b_key = str(bin(key))[2:].rjust(251, "0")
     height_cont = 0
@@ -115,8 +115,8 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
 
     # Then go down the path of the storage_trie
     for i in range(251):
-        if i % 50 == 0:
-            print(f"storage_trie path is {i}")
+        
+        print(f"storage_trie path is {i}")
         for row in cur.execute("SELECT quote(data) FROM tree_contracts WHERE hash =CAST(X'"+next_hash+"' AS BLOB);"):
             # for row in cur.execute("SELECT data FROM tree_contracts WHERE hash =CAST(X'"+next_hash+"' AS BLOB);"):
             # for row in cur.execute("SELECT quote(data) FROM tree_contracts WHERE quote(hash) LIKE '%" + next_hash+"%';"):
@@ -128,16 +128,16 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
             bit = b_key[height_cont]
             op_bit = 1-int(bit)
             if int(bit) == 0:
-                x = row[0][2:66]
-                y = row[0][66:130]
+                next_hash = row[0][2:66]
+                other_hash = row[0][66:130]
             elif int(bit) == 1:
-                y = row[0][2:66]
-                x = row[0][66:130]
+                other_hash = row[0][2:66]
+                next_hash = row[0][66:130]
             else:
                 assert 0 == 1
 
             height_cont += 1
- # we put the other_hash's node into the branch
+            # we put the other_hash's node into the branch
             for row in cur.execute("SELECT quote(data) FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
                 # for row in cur.execute("SELECT data FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
                 #    for row in cur.execute("SELECT quote(data) FROM tree_global WHERE quote(hash) LIKE '%" + other_hash+"%';"):
@@ -167,8 +167,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
             path_l = '0x' + row[0][130:132]
 
             # sanity check that we are on the correct path. (other option: if this breaks, return 0)
-            assert int(
-                "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
+            assert int("0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
             height_cont += int(path_l, 16)
         else:
 
@@ -183,7 +182,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
 
 
 def main():
-    con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
+    con = sqlite3.connect("goerli.sqlite")
 
     cur = con.cursor()
     # Then find the latest block root:

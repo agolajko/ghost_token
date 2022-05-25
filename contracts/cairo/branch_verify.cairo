@@ -10,6 +10,7 @@ from starkware.cairo.common.pow import pow
 # from starkware.cairo.common.math import div
 from starkware.cairo.common.alloc import alloc
 
+#used for testing delete later.
 @storage_var
 func variable() -> (res : felt):
 end 
@@ -107,38 +108,7 @@ end
 
 #we verify a branch. We do the outer checks here, and the recursive part in verify_branch_rec. 
 
-@external
-func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
-	leaf : tree_node,
-	branch_len : felt,
-	branch : tree_node*,
-	total_len : felt,
-	root_hash : felt)-> (res:felt):
- 	alloc_locals
-	
-	# %{print("start")%}
-	
-	assert leaf.height=total_len
-	let (local final_node : tree_node) = hash_branch_rec(leaf,branch_len, branch, 0)
-	
-	# %{print(ids.final_node.height)%}	
-	# %{print(ids.final_node.position)%}	
-	# %{print(ids.final_node.length)%}	
-	# %{print(ids.final_node.path)%}	
-	# %{print(ids.final_node.value)%}	
-	# %{print(ids.total_len - ids.final_node.height)%}	
-	
-	let (zeroed_node : tree_node) = empty_join_rec(final_node, final_node.height)
-	
-	# %{print(ids.zeroed_node)%}	
-	
-	# let (res) = hash_node(final_node)
-	let (res) = hash_node(zeroed_node)
-	# %{print(ids.res)%}
-	assert res=root_hash
-	return (res)
-	# return (3)
-end
+
 
 @external
 func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
@@ -162,22 +132,9 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	let zero_node_num : felt = (leaf.height-join_node.height)
 	let (zeroed_leaf : tree_node) = empty_join_rec(leaf, zero_node_num) 
 
-	# %{print(f" leaf height {ids.leaf.height}")%}
-	# %{print(f" leaf pos {ids.leaf.position}")%}
-	# %{print(f" join_node height {ids.join_node.height}")%}
-	# %{print(f" join_node pos {ids.join_node.position}")%}
-	# # %{print("zero_node_num")%}
-	# # %{print(ids.zero_node_num)%}
-	# %{print("positions")%}
-	# %{print(ids.zeroed_leaf)%}
-	# %{print(ids.zeroed_leaf.height)%}
-	# %{print(ids.zeroed_leaf.position)%}
-	# %{print(ids.join_node.height)%}
-	# %{print(ids.join_node.position)%}
 
-	let (l_leaf : tree_node, r_leaf : tree_node) = decide_higher(zeroed_leaf, join_node)
+	let (l_leaf : tree_node, r_leaf : tree_node) = decide_order(zeroed_leaf, join_node)
 	let (join_leaf : tree_node)= join_nodes(l_leaf, r_leaf)
-	# %{print(ids.join_leaf)%}
 	
 	let (new_leaf : tree_node) = hash_branch_rec(join_leaf, branch_len, branch, branch_iter+1)
 	return (new_leaf)
@@ -185,14 +142,12 @@ end
 
 
 @external
-func decide_higher{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
+func decide_order{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	node1 : tree_node,
 	node2 : tree_node) -> (l_node : tree_node, r_node : tree_node):
 	
 	alloc_locals
-	# %{print("decide_higher")%}	
-	# %{print(ids.node1.position)%}	
-	# %{print(ids.node2.position)%}	
+
 	if node1.position-node2.position==1:
 		return (node2, node1)
 	end
@@ -205,34 +160,6 @@ func decide_higher{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : B
 end
 
 @external
-func verify_both_branches{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
-	leaf : tree_node,
-	branch_low_len : felt,
-	branch_low : tree_node*,
-	total_low_len : felt,
-	root_low_hash : felt, 
-	contract_address: felt,
-	contract_hash : felt,
-	branch_high_len : felt,
-	branch_high : tree_node*,
-	total_high_len : felt,
-	root_high_hash : felt):
- 	alloc_locals
-	
-	# variable.write(18)
-	
-	verify_branch(leaf,branch_low_len, branch_low, total_low_len, root_low_hash)
-	let (local interm_hash1 : felt) = hash2{hash_ptr=pedersen_ptr}(contract_hash, root_low_hash)
-	let (local interm_hash2 : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash1, 0)
-	let (local leaf_high_hash : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash2, 0)
-
-	let (leaf_high : tree_node) = make_tree_node(total_high_len, contract_address, 0, 0, leaf_high_hash )
-	verify_branch(leaf_high, branch_high_len, branch_high, total_high_len, root_high_hash)
-		
-	return ()
-end
-
-@external
 func make_tree_node{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	height:felt,
 	position: felt,
@@ -242,3 +169,47 @@ func make_tree_node{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : 
 	alloc_locals
 	return (tree_node(height, position, length, path, value))
 end
+
+@external
+func verify_branch{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
+	leaf : tree_node,
+	branch_len : felt,
+	branch : tree_node*,
+	root_hash : felt)-> (res:felt):
+ 	alloc_locals
+	
+	
+	let (local final_node : tree_node) = hash_branch_rec(leaf,branch_len, branch, 0)
+	
+	let (zeroed_node : tree_node) = empty_join_rec(final_node, final_node.height)
+	
+	let (res) = hash_node(zeroed_node)
+	assert res=root_hash
+	return (res)
+end
+
+@external
+func verify_both_branches{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
+	leaf : tree_node,
+	branch_low_len : felt,
+	branch_low : tree_node*,
+	root_low_hash : felt, 
+	contract_address: felt,
+	contract_hash : felt,
+	branch_high_len : felt,
+	branch_high : tree_node*,
+	root_high_hash : felt):
+ 	alloc_locals
+	
+	verify_branch(leaf,branch_low_len, branch_low, root_low_hash)
+	let (local interm_hash1 : felt) = hash2{hash_ptr=pedersen_ptr}(contract_hash, root_low_hash)
+	let (local interm_hash2 : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash1, 0)
+	let (local leaf_high_hash : felt) = hash2{hash_ptr=pedersen_ptr}(interm_hash2, 0)
+
+	let (leaf_high : tree_node) = make_tree_node(251, contract_address, 0, 0, leaf_high_hash )
+	verify_branch(leaf_high, branch_high_len, branch_high, root_high_hash)
+		
+	return ()
+end
+
+
