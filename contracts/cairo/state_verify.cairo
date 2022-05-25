@@ -83,7 +83,7 @@ func verify_increment{
 	let (contract_hash_ : felt) = contract_hash.read()
 
 	#the main branch check
-	verify_both_branches(leaf, branch_low, total_low_len, root_low_hash, contract_address_, contract_hash_, branch_high, total_high_len, root_high_hash)
+	verify_both_branches(leaf, branch_low_len, branch_low, total_low_len, root_low_hash, contract_address_, contract_hash_, branch_high_len, branch_high, total_high_len, root_high_hash)
 
 	#the secondary checks
 	let (variable_key_ : felt) = variable_key.read()
