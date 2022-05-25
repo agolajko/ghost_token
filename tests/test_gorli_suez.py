@@ -104,7 +104,7 @@ async def test_import_branch_suez(test_get_hash: tuple, deploy_verify_contract):
     print(branch_contract)
 
     root_hash, storage_root, merkle_branch_high, merkle_branch_low = generate_proof(block_num=block_number,
-                                                                                    contract_address=int(storage_contract_address, 16), var_name="l1GatewayAddress")
+                                                                                    contract_address=int(storage_contract_address, 16), var_name="balances")
     merkle_branch_high_tuple = [tuple(i) for i in merkle_branch_high]
     merkle_branch_low_tuple = [tuple(i) for i in merkle_branch_low[1:]]
 
