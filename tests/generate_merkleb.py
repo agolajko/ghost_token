@@ -172,24 +172,13 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
                 f"height_cont {height_cont} and height_cont+int(path_l,16) {height_cont+int(path_l, 16)}")
 
             # sanity check that we are on the correct path. (other option: if this breaks, return 0)
-<< << << < HEAD
-<< << << < HEAD
-            assert int(
-                "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
-== == == =
-== == == =
->>>>>> > 50c2b97d3f9d1050486b12dd562725e069b9e361
-            print(f"lhs {type(row[0][66:130])}")
-            print(f"lhs {int(row[0][66:130],16)}")
-            # print(f"lhs {int("0x"+row[0][66:130], 16)}")
-            print(f"rhs {int(b_key[height_cont: height_cont+int(path_l, 16)], 2)}")
 
             assert int(
                 "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
-<< << << < HEAD
->>>>>> > c9557f3fd03ada45c6aa15ec87bbf77475f23c68
-== == == =
->>>>>> > 50c2b97d3f9d1050486b12dd562725e069b9e361
+
+            assert int(
+                "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
+
             height_cont += int(path_l, 16)
         else:
 
