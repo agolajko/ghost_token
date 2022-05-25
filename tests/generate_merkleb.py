@@ -5,7 +5,7 @@ from starkware.storage.names import generate_unique_key
 import json
 
 
-def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
+def generate_proof(block_num: int, contract_address: int, var_name: str, contract_variables: list):
     # con = sqlite3.connect("goerli.sqlite")
     con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
 
@@ -110,7 +110,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, *args):
     # I think this part is correct, I just don't know the names of the storage variables. I will try again on goerli.
 
     key = get_storage_var_address(
-        var_name, 1042400286771102661652363919924244740833084544629561888149967508378012757441)
+        var_name, *contract_variables)
     b_key = str(bin(key))[2:].rjust(251, "0")
     height_cont = 0
     print("hi still run")
