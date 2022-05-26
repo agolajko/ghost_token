@@ -7,7 +7,6 @@ from starkware.cairo.common.bitwise import bitwise_and, bitwise_xor
 from starkware.cairo.common.hash import hash2
 from starkware.cairo.common.math_cmp import is_le
 from starkware.cairo.common.pow import pow
-# from starkware.cairo.common.math import div
 from starkware.cairo.common.alloc import alloc
 
 #used for testing delete later.
@@ -37,7 +36,6 @@ func hash_node{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	end
 
 	let (local hash_value) = hash2{hash_ptr=pedersen_ptr}(node.value, node.path)
-	# %{print(ids.hash_value)%}
 	let node_value= node.length
 	let sum_value = hash_value  + node_value
 	
@@ -64,11 +62,6 @@ func join_nodes{range_check_ptr, pedersen_ptr : HashBuiltin*}(
 	let (second_hash) = hash_node(node2)
 	let (new_val) = hash2{hash_ptr=pedersen_ptr}(first_hash, second_hash)
 
-	# %{print("************************************************************")%}
-	# %{print(f"new joined node height: {ids.new_height} ")%}
-	# %{print(f"new joined node pos: {ids.new_pos} ")%}
-	# %{print(f"new joined node val: {ids.new_val} ")%}
-
 	return (tree_node(new_height, new_pos, 0, 0, new_val))
 end
 	
@@ -89,14 +82,6 @@ func empty_join_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : 
 	let leaf_path = leaf.path
 	let leaf_len= leaf.length
 	let (pow_leaf_len: felt) = pow(2,leaf.length)
-	# %{print(f"height of node {ids.leaf.height}")%}
-	# %{print(f"position of node {ids.leaf.position}")%}
-	# %{print(ids.iter)%}
-	# %{print(ids.iter)%}
-	# %{print(ids.leaf_len)%}
-	# %{print(ids.leaf_path)%}
-	# %{print("pow_leaf_len")%}
-	# %{print(ids.pow_leaf_len)%}
 	let new_path = leaf_path + res*pow_leaf_len
 	
 	let new_leaf = tree_node(leaf.height-1, new_pos, leaf.length+1,new_path , leaf.value )
@@ -108,8 +93,6 @@ end
 
 #we verify a branch. We do the outer checks here, and the recursive part in verify_branch_rec. 
 
-
-
 @external
 func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr : BitwiseBuiltin*}(
 	leaf : tree_node,
@@ -118,11 +101,6 @@ func hash_branch_rec{range_check_ptr, pedersen_ptr : HashBuiltin*, bitwise_ptr :
 	branch_iter : felt) -> (res_node : tree_node):
 	
 	alloc_locals
-	
-	# %{print("branch_iter")%}
-	# %{print(ids.branch_iter)%}
-	# %{print("branch_len")%}
-	# %{print(ids.branch_len)%}
 	
 	if branch_iter==branch_len:
 		return (leaf)
