@@ -27,5 +27,5 @@ def hello_world():
         merkleb_high=merkleb_high,
         merkleb_low=merkleb_low)
 
-# if __name__ == '__main__':
-#       app.run(host='0.0.0.0', port=port)
+if __name__ == '__main__':
+      app.run(host='0.0.0.0', port=port)
