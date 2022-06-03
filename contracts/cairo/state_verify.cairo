@@ -66,7 +66,7 @@ func verify_increment{
     pedersen_ptr : HashBuiltin*,
     range_check_ptr,
 	bitwise_ptr : BitwiseBuiltin*}(
-	
+	state_root_ : felt, 	
 	leaf : tree_node,
 	branch_low_len : felt,
 	branch_low : tree_node*,
@@ -90,7 +90,7 @@ func verify_increment{
 	assert leaf.position = variable_key_
 	let (variable_ : felt) = variable.read()
 	assert leaf.value = variable_
-	let (state_root_ : felt) = state_root.read()
+	
 	assert state_root_ = root_high_hash	
 		
 	
