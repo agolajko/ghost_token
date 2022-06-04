@@ -33,7 +33,15 @@ func variable_key() -> (res : felt):
 end 
 
 
-
+@view
+func get{
+    syscall_ptr : felt*,
+    pedersen_ptr : HashBuiltin*,
+    range_check_ptr,
+}()-> (res : felt):
+    let res : felt = variable.read()
+    return (res)
+end
 
 @external
 func initialise{
