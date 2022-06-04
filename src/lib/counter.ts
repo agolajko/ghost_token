@@ -4,7 +4,7 @@ import { useStarknet } from "../providers/StarknetProvider";
 import { starknetAddress } from "../addresses";
 
 //import COUNTER from "./abi/oldl1l2_abi.json";
-import OLDL1 from "./abi/l2_abi.json";
+import OLDL1 from "./abi/state_verify_abi.json";
 
 
 //const ADDRESS ="0x035572dec96ab362c35139675abc4f1c9d6b15ee29c98fbf3f0390a0f8500afa";
