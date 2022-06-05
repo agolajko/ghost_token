@@ -30,7 +30,7 @@ def handle_generate_proof():
             merkleb_high=merkleb_high,
             merkleb_low=merkleb_low,
             error="")
-    except Exception as e:
+    except AssertionError as e:
         response = jsonify(error=str(e))
     
     return response
