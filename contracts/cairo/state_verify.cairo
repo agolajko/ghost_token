@@ -52,7 +52,8 @@ func initialise{
     variable.write(10)
 	contract_hash.write(contract_hash_)
 	contract_address.write(contract_address_)
-    return ()
+	variable_key.write(778741677097751136629359488410499500026881115738990894538495916875030189956)
+	return ()
 end
 
 @external
