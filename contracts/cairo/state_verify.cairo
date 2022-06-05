@@ -33,7 +33,15 @@ func variable_key() -> (res : felt):
 end 
 
 
-
+@view
+func get{
+    syscall_ptr : felt*,
+    pedersen_ptr : HashBuiltin*,
+    range_check_ptr,
+}()-> (res : felt):
+    let res : felt = variable.read()
+    return (res)
+end
 
 @external
 func initialise{
@@ -66,7 +74,7 @@ func verify_increment{
     pedersen_ptr : HashBuiltin*,
     range_check_ptr,
 	bitwise_ptr : BitwiseBuiltin*}(
-	
+	state_root_ : felt, 	
 	leaf : tree_node,
 	branch_low_len : felt,
 	branch_low : tree_node*,
@@ -83,14 +91,14 @@ func verify_increment{
 	let (contract_hash_ : felt) = contract_hash.read()
 
 	#the main branch check
-	verify_both_branches(leaf, branch_low_len, branch_low, total_low_len, root_low_hash, contract_address_, contract_hash_, branch_high_len, branch_high, total_high_len, root_high_hash)
+	verify_both_branches(leaf, branch_low_len, branch_low,  root_low_hash, contract_address_, contract_hash_, branch_high_len, branch_high, root_high_hash)
 
 	#the secondary checks
 	let (variable_key_ : felt) = variable_key.read()
 	assert leaf.position = variable_key_
 	let (variable_ : felt) = variable.read()
 	assert leaf.value = variable_
-	let (state_root_ : felt) = state_root.read()
+	
 	assert state_root_ = root_high_hash	
 		
 	

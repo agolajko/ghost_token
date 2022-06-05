@@ -5,5 +5,4 @@ venv
 **/**.egg-info
 build
 reports
-goerli.sql
 node_modules
