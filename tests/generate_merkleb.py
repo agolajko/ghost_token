@@ -206,9 +206,9 @@ def main():
     con.close
 
     contract_address = int(
-        "0x35572dec96ab362c35139675abc4f1c9d6b15ee29c98fbf3f0390a0f8500afa", 16)
+        "0x071cdfdb934f450e8441dd201c5d89d5f6a82a68c02969de99f5481bd7a828f8", 16)
     generate_proof(block_num=block_number,
-                   contract_address=contract_address, var_name="l1GatewayAddress")
+                   contract_address=contract_address, var_name="variable")
 
 
 if __name__ == '__main__':
