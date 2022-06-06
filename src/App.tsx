@@ -73,7 +73,7 @@ function App() {
       &nbsp; <a href="https://chrome.google.com/webstore/detail/argent-x-starknet-wallet/dlcobpjiigpikoobohmabehhmhfoodbb"><img src="/argentx-button-download.svg" width="200" /></a>
 
 
-      <GetBalance contract={counterContract} />
+      {/* <GetBalance contract={counterContract} /> */}
 
 
 

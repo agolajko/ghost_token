@@ -16,8 +16,6 @@ export function Transfer({ contract }: { contract?: Contract }) {
     submitting,
   } = useStarknetInvoke(contract, "transfer");
 
-
-
   const transactionStatus = useTransaction(hash);
 
   const [amount, setAmount] = React.useState("");
@@ -68,7 +66,7 @@ export function Transfer({ contract }: { contract?: Contract }) {
   //console.log(contract)
   //if (!account) return null;
 
-  function handle_click() {
+  async function handle_click() {
     // first perform the post request 
     // next send the result to the contract
     console.log("works?");
@@ -88,11 +86,11 @@ export function Transfer({ contract }: { contract?: Contract }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(send_data),
-      }).then(response_data => response_data.json()).then(res => console.log(res));
+      })
+      .then(response_data => response_data.json())
+      .then(res => console.log(res));
 
-
-
-    // console.log(response_data.json());
+    // console.log(response_data);
     // return response_data.json();
   }
 
