@@ -1,0 +1,330 @@
+[
+    {
+        "members": [
+            {
+                "name": "height",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "position",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "length",
+                "offset": 2,
+                "type": "felt"
+            },
+            {
+                "name": "path",
+                "offset": 3,
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "offset": 4,
+                "type": "felt"
+            }
+        ],
+        "name": "tree_node",
+        "size": 5,
+        "type": "struct"
+    },
+    {
+        "inputs": [
+            {
+                "name": "node",
+                "type": "tree_node"
+            }
+        ],
+        "name": "hash_node",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "node1",
+                "type": "tree_node"
+            },
+            {
+                "name": "node2",
+                "type": "tree_node"
+            }
+        ],
+        "name": "join_nodes",
+        "outputs": [
+            {
+                "name": "res_node",
+                "type": "tree_node"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "leaf",
+                "type": "tree_node"
+            },
+            {
+                "name": "iter",
+                "type": "felt"
+            }
+        ],
+        "name": "empty_join_rec",
+        "outputs": [
+            {
+                "name": "final_leaf",
+                "type": "tree_node"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "leaf",
+                "type": "tree_node"
+            },
+            {
+                "name": "branch_len",
+                "type": "felt"
+            },
+            {
+                "name": "branch",
+                "type": "tree_node*"
+            },
+            {
+                "name": "branch_iter",
+                "type": "felt"
+            }
+        ],
+        "name": "hash_branch_rec",
+        "outputs": [
+            {
+                "name": "res_node",
+                "type": "tree_node"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "node1",
+                "type": "tree_node"
+            },
+            {
+                "name": "node2",
+                "type": "tree_node"
+            }
+        ],
+        "name": "decide_order",
+        "outputs": [
+            {
+                "name": "l_node",
+                "type": "tree_node"
+            },
+            {
+                "name": "r_node",
+                "type": "tree_node"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "height",
+                "type": "felt"
+            },
+            {
+                "name": "position",
+                "type": "felt"
+            },
+            {
+                "name": "length",
+                "type": "felt"
+            },
+            {
+                "name": "path",
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "type": "felt"
+            }
+        ],
+        "name": "make_tree_node",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "tree_node"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "leaf",
+                "type": "tree_node"
+            },
+            {
+                "name": "branch_len",
+                "type": "felt"
+            },
+            {
+                "name": "branch",
+                "type": "tree_node*"
+            },
+            {
+                "name": "root_hash",
+                "type": "felt"
+            }
+        ],
+        "name": "verify_branch",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "leaf",
+                "type": "tree_node"
+            },
+            {
+                "name": "branch_low_len",
+                "type": "felt"
+            },
+            {
+                "name": "branch_low",
+                "type": "tree_node*"
+            },
+            {
+                "name": "root_low_hash",
+                "type": "felt"
+            },
+            {
+                "name": "contract_address",
+                "type": "felt"
+            },
+            {
+                "name": "contract_hash",
+                "type": "felt"
+            },
+            {
+                "name": "branch_high_len",
+                "type": "felt"
+            },
+            {
+                "name": "branch_high",
+                "type": "tree_node*"
+            },
+            {
+                "name": "root_high_hash",
+                "type": "felt"
+            }
+        ],
+        "name": "verify_both_branches",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "contract_hash_",
+                "type": "felt"
+            },
+            {
+                "name": "contract_address_",
+                "type": "felt"
+            }
+        ],
+        "name": "initialise",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "state_root_",
+                "type": "felt"
+            }
+        ],
+        "name": "set_state_root",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "state_root_",
+                "type": "felt"
+            },
+            {
+                "name": "leaf",
+                "type": "tree_node"
+            },
+            {
+                "name": "branch_low_len",
+                "type": "felt"
+            },
+            {
+                "name": "branch_low",
+                "type": "tree_node*"
+            },
+            {
+                "name": "total_low_len",
+                "type": "felt"
+            },
+            {
+                "name": "root_low_hash",
+                "type": "felt"
+            },
+            {
+                "name": "branch_high_len",
+                "type": "felt"
+            },
+            {
+                "name": "branch_high",
+                "type": "tree_node*"
+            },
+            {
+                "name": "total_high_len",
+                "type": "felt"
+            },
+            {
+                "name": "root_high_hash",
+                "type": "felt"
+            }
+        ],
+        "name": "verify_increment",
+        "outputs": [],
+        "type": "function"
+    }
+]
