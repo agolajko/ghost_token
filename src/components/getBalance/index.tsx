@@ -5,14 +5,14 @@ import { useStarknet } from "../../providers/StarknetProvider";
 import { useTransaction } from "../../providers/TransactionsProvider";
 import { VoyagerLink } from "../VoyagerLink";
 import Big from "big.js";
-import styles from "./index.module.css";  
+import styles from "./index.module.css";
 
-export function GetBalance({ contract}: { contract?: Contract}) {
+export function GetBalance({ contract }: { contract?: Contract }) {
   const { account } = useStarknet();
-   
+
   //const value = 12;
   //let value: any  = useStarknetCall(contract, "getBalance", ["2308540148694671285865417627099065456738507260679927862090683974016524797009"]);
-  let value: any  = useStarknetCall(contract, "getBalance", [account]);
+  let value: any = useStarknetCall(contract, "getBalance", [account]);
 
   let val_low = value?.balance?.low
   let val_high = value?.balance?.high
@@ -25,30 +25,33 @@ export function GetBalance({ contract}: { contract?: Contract}) {
   //console.log(val_high)
   //console.log(BigInt(val_low)/BigInt(10**9))
   //console.log(BigInt(BigInt(val_low)+BigInt(2**128) * BigInt(val_high)))
-  if (val_low && val_high) {let val_total =(Big(BigInt(BigInt(val_low)+BigInt(2**128) * BigInt(val_high)).toString()).div(Big(10**18))).toString();
-  console.log(val_total)
+  if (val_low && val_high) {
+    let val_total = (Big(BigInt(BigInt(val_low) + BigInt(2 ** 128) * BigInt(val_high)).toString()).div(Big(10 ** 18))).toString();
+    console.log(val_total)
 
-  return (
-    <div className={styles.green}>
+    return (
+      <div className={styles.green}>
 
-        Your Starknet balance: {val_total} eth
-        
+        Storage variable value: {val_total}
 
-    </div>
-      )
-    
+
+      </div>
+    )
+
   }
 
 
- {  return (
-    <div className={styles.green}>
+  {
+    return (
+      <div className={styles.green}>
 
         Your Starknet balance: 0 eth
-        
 
-    </div>
-      ) }
-    
-    
+
+      </div>
+    )
+  }
+
+
 }
- 
+

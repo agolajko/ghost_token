@@ -68,12 +68,46 @@ export function Transfer({ contract }: { contract?: Contract }) {
   //console.log(contract)
   //if (!account) return null;
 
+  function handle_click() {
+    // first perform the post request 
+    // next send the result to the contract
+    console.log("works?");
+
+    const send_data = {
+      "block": "230071",
+      "contract": "0x35572dec96ab362c35139675abc4f1c9d6b15ee29c98fbf3f0390a0f8500afa",
+      "variable": "l1GatewayAddress"
+    }
+
+    fetch(
+      "https://test.slush.dev/generate_proof",
+      {
+        method: 'POST',
+        // mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(send_data),
+      }).then(response_data => response_data.json()).then(res => console.log(res));
+
+
+
+    // console.log(response_data.json());
+    // return response_data.json();
+  }
+
+  function handle_click2() {
+    // first perform the post request 
+    // next send the result to the contract
+    console.log("works?");
+
+    // console.log(response_data.json());
+    // return response_data.json();
+  }
+
   try {
     return (
       <div className={styles.counter}>
-
-
-
 
         <div className="row">
           <input onChange={updateAddress} value={addr} type="text" placeholder="Value of storage variable" />
@@ -85,7 +119,8 @@ export function Transfer({ contract }: { contract?: Contract }) {
           &nbsp;
 
           <button
-            onClick={() => transfer && transfer({ addr, amount_low, amount_high })}
+            // onClick={() => transfer && transfer({ addr, amount_low, amount_high })}
+            onClick={handle_click}
           //Tried transferWithError here, that did not catch the error either. 
           //disabled={!transfer || submitting}
           >
