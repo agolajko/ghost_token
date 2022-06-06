@@ -30,7 +30,7 @@ export function GetBalance({ contract }: { contract?: Contract }) {
     return (
       <div className={styles.green}>
 
-        The current value is: {value?.res}
+        The current value is: {parseInt(value?.res)}
 
 
       </div>
