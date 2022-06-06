@@ -54,33 +54,9 @@ export function Transfer({ contract }: { contract?: Contract }) {
     [setRoot]
   );
 
-  // function get_amount_low(one_num) {
-  //   if (one_num == "") { return String(0) }
-  //   let new_int = BigInt(Math.floor(10 ** 18 * parseFloat(one_num)));
-  //   let am_low = new_int % BigInt((2 ** 128));
-  //   return String(am_low)
-  // }
 
-  // function get_amount_high(one_num) {
-  //   if (one_num == "") { return String(0) }
-  //   const new_int = BigInt(Math.floor(10 ** 18 * parseFloat(one_num)));
-  //   console.log(new_int)
-  //   const am_high = String(new_int / BigInt(2 ** 128));
-  //   return am_high
-  // }
 
-  // function transferWithError(params) {
-  //   try {
-  //     if (transfer) transfer(params);
-  //     return (1)
-  //   }
-  //   catch { return (0) }
-  //   finally { return (0) }
-  // }
-  //console.log(contract)
-  //if (!account) return null;
-
-  async function handle_click(storage_var, block_number, state_root) {
+  async function handle_click(storage_var, block_number, state_root, verify_increment) {
     // first perform the post request 
     // next send the result to the contract
     console.log("works?");
@@ -144,6 +120,8 @@ export function Transfer({ contract }: { contract?: Contract }) {
 
 
     verify_increment && verify_increment({ state_root_, leaf_height, leaf_position, leaf_length, leaf_path, leaf_value, branch_low, total_low_len, root_low_hash, branch_high, total_high_len, root_high_hash })
+    // return ({state_root_, leaf_height, leaf_position, leaf_length, leaf_path, leaf_value, branch_low, total_low_len, root_low_hash, branch_high, total_high_len, root_high_hash})
+    console.log("get ehre?")
   }
 
   try {
@@ -160,8 +138,11 @@ export function Transfer({ contract }: { contract?: Contract }) {
           &nbsp;
 
           <button
-            // onClick={() => transfer && transfer({ addr, amount_low, amount_high })}
-            onClick={() => handle_click(storage_var, block_number, state_root)}
+            onClick={() => verify_increment && verify_increment({ 0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 })}
+          // onClick={() => handle_click(storage_var, block_number, state_root, verify_increment)}
+          // onClick={() => transfer && transfer({ addr, amount_low, amount_high })}
+          // onClick={() => ({ const {state_root_, leaf_height, leaf_position, leaf_length, leaf_path, leaf_value, branch_low, total_low_len, root_low_hash, branch_high, total_high_len, root_high_hash} = await handle_click(storage_var, block_number, state_root);
+          // verify_increment && verify_increment({ state_root_, leaf_height, leaf_position, leaf_length, leaf_path, leaf_value, branch_low, total_low_len, root_low_hash, branch_high, total_high_len, root_high_hash }) }}
           //Tried transferWithError here, that did not catch the error either. 
           //disabled={!transfer || submitting}
           >
