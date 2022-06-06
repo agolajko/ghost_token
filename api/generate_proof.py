@@ -3,11 +3,15 @@ from starkware.starknet.public.abi import get_storage_var_address
 
 
 def generate_proof(db_path: str, block_num: int, contract_address: int, var_name: str, *args):
+    print("Generating proof ...")
+    print("block_number ", block_num)
+    print("contract_address ", contract_address)
+    print("var_name ", var_name)
+    print("db_path ", db_path)
+    
     con = sqlite3.connect(db_path)
 
     cur = con.cursor()
-    print("hi run")
-    print(f"cursor {cur}")
     # We prepare the Merkle branch
     merkleb_high = []
     merkleb_low = []
@@ -16,6 +20,8 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
     # Note: formatting: felts are 251 bit long. That should be 256/4=64 chars.Leftmost 5 bits are empty.
     b_address = str(bin(contract_address))[2:].rjust(251, "0")
     height = 0
+
+    root_hash = ""
 
     # Then find the correct block root:
     for row in cur.execute("SELECT quote(root) FROM starknet_blocks WHERE number IS "+str(block_num) + " ; "):
@@ -88,8 +94,12 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
 
         else:
             # we are at the leaf. The leaf has no data, as the hash is the data itself.
-            merkleb_high.insert(
-                0, [height, int(b_address[0:height], 2), 0, 0, int(next_hash, 16)])
+            if height>0:
+                merkleb_high.insert(
+                    0, [height, int(b_address[0:height], 2), 0, 0, int(next_hash, 16)])
+            else:
+                merkleb_high.insert(
+                    0, [height, 0, 0, 0, int(next_hash, 16)])
             break
     print("hi run 3")
 
@@ -168,9 +178,12 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
                 "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
             height_cont += int(path_l, 16)
         else:
-
-            merkleb_low.insert(
-                0, [height_cont, int(b_key[0:height_cont], 2), 0, 0, int(next_hash, 16)])
+            if height_cont> 0:
+                merkleb_low.insert(
+                    0, [height_cont, int(b_key[0:height_cont], 2), 0, 0, int(next_hash, 16)])
+            else:
+                 merkleb_low.insert(
+                    0, [height_cont, 0, 0, 0, int(next_hash, 16)])
             break
 
     con.close

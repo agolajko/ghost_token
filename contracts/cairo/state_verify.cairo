@@ -33,7 +33,15 @@ func variable_key() -> (res : felt):
 end 
 
 
-
+@view
+func get{
+    syscall_ptr : felt*,
+    pedersen_ptr : HashBuiltin*,
+    range_check_ptr,
+}()-> (res : felt):
+    let res : felt = variable.read()
+    return (res)
+end
 
 @external
 func initialise{
@@ -44,7 +52,8 @@ func initialise{
     variable.write(10)
 	contract_hash.write(contract_hash_)
 	contract_address.write(contract_address_)
-    return ()
+	variable_key.write(778741677097751136629359488410499500026881115738990894538495916875030189956)
+	return ()
 end
 
 @external
@@ -83,7 +92,7 @@ func verify_increment{
 	let (contract_hash_ : felt) = contract_hash.read()
 
 	#the main branch check
-	verify_both_branches(leaf, branch_low_len, branch_low, total_low_len, root_low_hash, contract_address_, contract_hash_, branch_high_len, branch_high, total_high_len, root_high_hash)
+	verify_both_branches(leaf, branch_low_len, branch_low,  root_low_hash, contract_address_, contract_hash_, branch_high_len, branch_high, root_high_hash)
 
 	#the secondary checks
 	let (variable_key_ : felt) = variable_key.read()

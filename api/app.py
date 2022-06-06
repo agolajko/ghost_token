@@ -14,18 +14,26 @@ def live():
     return jsonify(status="live")
 
 @app.route("/generate_proof", methods=["POST"])
-def hello_world():
+def handle_generate_proof():
     data = request.get_json()
     block_num = int(data.get("block"))
     contract_address = int(data.get("contract"), 16)
-    var_name = int(data.get("variable"))
+    var_name = data.get("variable")
 
-    (root_hash, storage_root,  merkleb_high, merkleb_low) = generate_proof(db_path, block_num, contract_address, var_name)
-    return jsonify(
-        root_hash=root_hash,
-        storage_root=storage_root,
-        merkleb_high=merkleb_high,
-        merkleb_low=merkleb_low)
+    response = None
+    
+    try:
+        (root_hash, storage_root,  merkleb_high, merkleb_low) = generate_proof(db_path, block_num, contract_address, var_name)
+        response = jsonify(
+            root_hash=root_hash,
+            storage_root=storage_root,
+            merkleb_high=merkleb_high,
+            merkleb_low=merkleb_low,
+            error="")
+    except AssertionError as e:
+        response = jsonify(error=str(e))
+    
+    return response
 
 if __name__ == '__main__':
       app.run(host='0.0.0.0', port=port)
