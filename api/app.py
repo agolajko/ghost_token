@@ -1,11 +1,15 @@
 import os
 from flask import (Flask, request, jsonify)
+from flask_cors import CORS, cross_origin
 from generate_proof import generate_proof
+
 
 db_path = os.environ['DB_PATH'] if 'DB_PATH' in os.environ else "goerli.sql"
 port = os.environ['APP_PORT'] if 'APP_PORT' in os.environ else 3000
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 print(f"Starting app DB_PATH={db_path}, PORT={port} ...")
 
@@ -14,6 +18,7 @@ def live():
     return jsonify(status="live")
 
 @app.route("/generate_proof", methods=["POST"])
+@cross_origin()
 def handle_generate_proof():
     data = request.get_json()
     block_num = int(data.get("block"))
