@@ -11,10 +11,10 @@ export function Transfer({ contract }: { contract?: Contract }) {
 
   const { account } = useStarknet();
   const {
-    invoke: transfer,
+    invoke: verify_increment,
     hash,
     submitting,
-  } = useStarknetInvoke(contract, "transfer");
+  } = useStarknetInvoke(contract, "verify_increment");
 
   const transactionStatus = useTransaction(hash);
 
@@ -91,15 +91,6 @@ export function Transfer({ contract }: { contract?: Contract }) {
       .then(res => console.log(res));
 
     // console.log(response_data);
-    // return response_data.json();
-  }
-
-  function handle_click2() {
-    // first perform the post request 
-    // next send the result to the contract
-    console.log("works?");
-
-    // console.log(response_data.json());
     // return response_data.json();
   }
 

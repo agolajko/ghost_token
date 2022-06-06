@@ -33,7 +33,7 @@ import { Body, Button, Header, Image, Link } from "./components";
 import useWeb3Modal from "./hooks/useWeb3Modal";
 import abis from "./lib/abi/abis.js";
 import Big from "big.js";
-import { ethAddress } from "./addresses"
+// import { ethAddress } from "./addresses"
 
 declare let window: any;
 
