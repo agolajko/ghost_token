@@ -30,5 +30,6 @@ export function transactionsReducer(
     case "UPDATE_TRANSACTIONS": {
       return action.payload;
     }
+    
   }
 }
