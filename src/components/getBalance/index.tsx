@@ -40,18 +40,15 @@ export function GetBalance({ contract }: { contract?: Contract }) {
 }
 
 
-{
-  return (
-    <div className={styles.green}>
+// {
+//   return (
+//     <div className={styles.green}>
 
-      The current value is: 0
-
-
-
-    </div>
-  )
-}
+//       The current value is: 0
 
 
-}
+
+//     </div>
+//   )
+// }
 
