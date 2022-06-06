@@ -10,7 +10,6 @@ import styles from "./index.module.css";
 export function GetBalance({ contract }: { contract?: Contract }) {
   const { account } = useStarknet();
 
-  //const value = 12;
   //let value: any  = useStarknetCall(contract, "getBalance", ["2308540148694671285865417627099065456738507260679927862090683974016524797009"]);
   let value: any = useStarknetCall(contract, "get");
 
@@ -27,18 +26,17 @@ export function GetBalance({ contract }: { contract?: Contract }) {
   //console.log(BigInt(BigInt(val_low)+BigInt(2**128) * BigInt(val_high)))
   //if (val_low && val_high) {let val_total =(Big(BigInt(BigInt(val_low)+BigInt(2**128) * BigInt(val_high)).toString()).div(Big(10**18))).toString();
   // console.log(val_total)
-  if (value){
+  if (value.res>0){
     return (
       <div className={styles.green}>
 
-        The current value is: {value}
+        The current value is: {value.res}
 
 
       </div>
   )}
 
-
- {
+  else {
    return (
      <div className={styles.green}>
 
