@@ -26,11 +26,11 @@ export function GetBalance({ contract }: { contract?: Contract }) {
   //console.log(BigInt(BigInt(val_low)+BigInt(2**128) * BigInt(val_high)))
   //if (val_low && val_high) {let val_total =(Big(BigInt(BigInt(val_low)+BigInt(2**128) * BigInt(val_high)).toString()).div(Big(10**18))).toString();
   // console.log(val_total)
-  if (value.res>0){
+  if (value?.res>0){
     return (
       <div className={styles.green}>
 
-        The current value is: {value.res}
+        The current value is: {value?.res}
 
 
       </div>
