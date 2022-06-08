@@ -19,9 +19,14 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "noImplicitAny": false 
+    "traceResolution": true,
+    "noImplicitAny": false
   },
+  // "include": [
+  // "src"
+  // ]
   "include": [
-    "src"
-  ]
+    "src/**/*.ts",
+    "tests/**/*.ts"
+  ],
 }
