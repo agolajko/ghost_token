@@ -299,10 +299,6 @@
                 "type": "tree_node*"
             },
             {
-                "name": "total_low_len",
-                "type": "felt"
-            },
-            {
                 "name": "root_low_hash",
                 "type": "felt"
             },
@@ -313,10 +309,6 @@
             {
                 "name": "branch_high",
                 "type": "tree_node*"
-            },
-            {
-                "name": "total_high_len",
-                "type": "felt"
             },
             {
                 "name": "root_high_hash",
