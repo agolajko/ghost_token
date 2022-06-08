@@ -79,11 +79,9 @@ func verify_increment{
 	leaf : tree_node,
 	branch_low_len : felt,
 	branch_low : tree_node*,
-	total_low_len : felt,
 	root_low_hash : felt, 
 	branch_high_len : felt,
 	branch_high : tree_node*,
-	total_high_len : felt,
 	root_high_hash : felt):
    	alloc_locals
 
