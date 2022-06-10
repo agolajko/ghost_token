@@ -146,7 +146,7 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
 
             height_cont += 1
  # we put the other_hash's node into the branch
-            for row in cur.execute("SELECT quote(data) FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
+            for row in cur.execute("SELECT quote(data) FROM tree_contracts WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
                 # for row in cur.execute("SELECT data FROM tree_global WHERE hash =CAST(X'"+other_hash+"' AS BLOB);"):
                 #    for row in cur.execute("SELECT quote(data) FROM tree_global WHERE quote(hash) LIKE '%" + other_hash+"%';"):
                 print(f"row is {row}")
