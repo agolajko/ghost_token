@@ -35,8 +35,8 @@ def handle_generate_proof():
         response = jsonify(
             root_hash=str(root_hash),
             storage_root=str(storage_root),
-            merkleb_high=str(merkleb_high),
-            merkleb_low=str(merkleb_low),
+            merkleb_high=merkleb_high,
+            merkleb_low=merkleb_low,
             error="")
     except AssertionError as e:
         response = jsonify(error=str(e))
