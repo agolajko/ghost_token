@@ -35,7 +35,7 @@ async def test_get_hash():
     # storage_contract_address = "0x35572dec96ab362c35139675abc4f1c9d6b15ee29c98fbf3f0390a0f8500afa"
     # storage_tx_hash = "0x5750bd4870d80c7f58c3f2e443f54001fa5427f36e3dad4b66a95fcd30874aa"
 
-    storage_contract_address = "0x06c6baefe2e3948d4c823e1d1be041c7775b1fda8b6414b4caaf31fb9c3832ec"
+    storage_contract_address = "0x6c6baefe2e3948d4c823e1d1be041c7775b1fda8b6414b4caaf31fb9c3832ec"
     storage_tx_hash = "0x50dbc9540666eff652a2717449bbf84a3e9929b60ab5e81f094cfc41a58cdd5"
 
     # get feeder_gateway_client
@@ -46,16 +46,19 @@ async def test_get_hash():
     block_hash = None
     block_number = None
     acceptance_iterator = 0
-    while block_hash == None:
-        acceptance_iterator += 1
-        print(f"this is loop {acceptance_iterator}")
-        tx_receipt = await feeder_gateway_client.get_transaction_receipt(tx_hash=storage_tx_hash)
+    # while block_hash == None:
+    #     acceptance_iterator += 1
+    #     print(f"this is loop {acceptance_iterator}")
+    #     tx_receipt = await feeder_gateway_client.get_transaction_receipt(tx_hash=storage_tx_hash)
 
-        block_hash = tx_receipt.block_hash
-        block_number = tx_receipt.block_number
-        print(block_hash)
-        print(block_number)
-        time.sleep(15)
+    #     block_hash = tx_receipt.block_hash
+    #     block_number = tx_receipt.block_number
+    #     print(block_hash)
+    #     print(block_number)
+    #     time.sleep(15)
+
+    block_hash = "0x372061ee628a5f8c49466b006b3b02f2d2e8ae7463c98e3e4a6fda61a46c5f0"
+    block_number = 233425
 
     block_state_updates = await feeder_gateway_client.get_state_update(
         block_hash=block_hash, block_number=block_number)
@@ -64,7 +67,7 @@ async def test_get_hash():
     storage_contract_hash = 0
     for contract_iterator in dep_contract_list:
         if contract_iterator["address"] == storage_contract_address:
-            storage_contract_hash = contract_iterator["contract_hash"]
+            storage_contract_hash = contract_iterator["class_hash"]
 
     assert storage_contract_hash != 0, "Contract not found on chain"
 
@@ -75,14 +78,15 @@ async def test_get_hash():
 # call the contract
 
 @pytest.mark.asyncio
-async def test_core(starknet_ins: Starknet, branch_contract: StarknetContract):
+async def test_core(starknet_ins: Starknet, branch_contract: StarknetContract, test_get_hash: tuple):
 
     # make a post request for the branch needed
+    (block_number, storage_contract_address, contract_hash) = test_get_hash
 
     url = "https://test.slush.dev/generate_proof"
 
-    contract_address = "0x06c6baefe2e3948d4c823e1d1be041c7775b1fda8b6414b4caaf31fb9c3832ec"
-    contract_hash = ""
+    contract_address = storage_contract_address
+    # contract_hash = ""
 
     # set the following by hand to sth we know will work
     json_object = {
@@ -109,19 +113,24 @@ async def test_core(starknet_ins: Starknet, branch_contract: StarknetContract):
 
     # format the merkle trees so it can be passed to the contract
 
-    merkle_branch_low_dicts = [{"height": i[0], "position": i[1],
-                                "length": i[2], "path": i[3], "value": i[4]} for i in merkle_branch_low[1:]]
-    merkle_branch_high_dicts = [{"height": i[0], "position": i[1],
-                                "length": i[2], "path": i[3], "value": i[4]} for i in merkle_branch_high]
+    # merkle_branch_low_dicts = [{"height": i[0], "position": i[1],
+    #                             "length": i[2], "path": i[3], "value": i[4]} for i in merkle_branch_low[1:]]
+    # merkle_branch_high_dicts = [{"height": i[0], "position": i[1],
+    #                             "length": i[2], "path": i[3], "value": i[4]} for i in merkle_branch_high]
+    merkle_branch_low_tuple = [tuple(i) for i in merkle_branch_low[1:]]
+    merkle_branch_high_tuple = [tuple(i) for i in merkle_branch_high]
 
     print(merkle_branch_low)
-    leaf = merkle_branch_low[0]
+    leaf = tuple(merkle_branch_low[0])
     print(f"leaf elements {leaf}")
 
     leaf_dict = {"height": leaf[0], "position": leaf[1],
                  "length": leaf[2], "path": leaf[3], "value": leaf[4]}
 
-    res_hash = await branch_contract.functions["verify_both_branches"].invoke(leaf=leaf_dict, branch_low=merkle_branch_low_dicts,
-                                                                              root_low_hash=int(storage_root, 16), contract_address=int(contract_address, 16), contract_hash=int(contract_hash, 16),
-                                                                              branch_high=merkle_branch_high_dicts,
-                                                                              root_high_hash=int(root_hash, 16), max_fee=0)
+    res_hash = await branch_contract.verify_both_branches(leaf=leaf, branch_low=merkle_branch_low_tuple,
+                                                          root_low_hash=int("0x" + storage_root, 16), contract_address=int(contract_address, 16), contract_hash=int("0x" + contract_hash, 16),
+                                                          branch_high=merkle_branch_high_tuple,
+                                                          root_high_hash=int("0x" + root_hash, 16)).call()
+
+    print(res_hash)
+    return()
