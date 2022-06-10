@@ -116,7 +116,7 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
     # we calculate the key
     # I think this part is correct, I just don't know the names of the storage variables. I will try again on goerli.
 
-    key = get_storage_var_address(var_name, args)
+    key = get_storage_var_address(var_name, *args)
     b_key = str(bin(key))[2:].rjust(251, "0")
     height_cont = 0
     print("hi still run")
