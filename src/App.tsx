@@ -64,7 +64,7 @@ function App() {
       {<GetBalance contract={currentContract} />}
 
       <h1>Verify a storage variable</h1>
-      <p> This is a proof of concept for an inter zkRollup trustless bridge. For now it works "Starknet to Starknet".
+      <p> This is a proof-of-concept for an inter zkRollup trustless bridge. For now it works "Starknet to Starknet".
         You can verify the value of a storage variable. Get one of the latest blocks from <a href="https://goerli.voyager.online/blocks"> https://goerli.voyager.online/blocks</a>
       </p>
 
