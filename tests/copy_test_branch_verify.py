@@ -117,15 +117,23 @@ async def test_core(starknet_ins: Starknet, branch_contract: StarknetContract, t
     #                             "length": i[2], "path": i[3], "value": i[4]} for i in merkle_branch_low[1:]]
     # merkle_branch_high_dicts = [{"height": i[0], "position": i[1],
     #                             "length": i[2], "path": i[3], "value": i[4]} for i in merkle_branch_high]
-    merkle_branch_low_tuple = [tuple(i) for i in merkle_branch_low[1:]]
+    merkle_branch_low_tuple = [tuple(i) for i in merkle_branch_low]
     merkle_branch_high_tuple = [tuple(i) for i in merkle_branch_high]
 
     print(merkle_branch_low)
     leaf = tuple(merkle_branch_low[0])
     print(f"leaf elements {leaf}")
 
-    leaf_dict = {"height": leaf[0], "position": leaf[1],
-                 "length": leaf[2], "path": leaf[3], "value": leaf[4]}
+    contract_leaf=tuple(merkle_branch_high[0])
+
+    res_hash = await branch_contract.verify_branch( contract_leaf ,
+                                                          branch=merkle_branch_high_tuple[1:],
+                                                          root_hash=int("0x" + root_hash, 16)).call()
+
+    res_hash = await branch_contract.verify_branch(leaf=leaf, branch=merkle_branch_low_tuple[1:],
+                                                          root_hash=int("0x" + storage_root, 16)).call()
+
+    
 
     res_hash = await branch_contract.verify_both_branches(leaf=leaf, branch_low=merkle_branch_low_tuple,
                                                           root_low_hash=int("0x" + storage_root, 16), contract_address=int(contract_address, 16), contract_hash=int("0x" + contract_hash, 16),

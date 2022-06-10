@@ -108,9 +108,9 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
     for row in cur.execute("SELECT quote(root), quote(hash) FROM contract_states WHERE state_hash =CAST(X'"+next_hash+"' AS BLOB);"):
         # for row in cur.execute("SELECT  quote(root), quote(hash) FROM contract_states WHERE quote(state_hash) LIKE '%" + next_hash + "%';"):
         next_hash = row[0][2:66]
-        storage_root = next_hash
+        
         other_hash = row[1][2:66]
-
+        storage_root = next_hash
         break
 
     # we calculate the key
