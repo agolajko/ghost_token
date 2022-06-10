@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from starknet_py.contract import Contract
 from starknet_py.net.client import Client
-from services.external_api.client import RetryConfig
+from services.external_api.base_client import RetryConfig
 from starkware.starknet.services.api.feeder_gateway.feeder_gateway_client import FeederGatewayClient
 from starkware.starknet.cli.starknet_cli import get_feeder_gateway_client
 from collections import namedtuple
@@ -27,7 +27,7 @@ async def deploy_verify_contract():
 
     # deploy verifying contract
     deployment_result = await Contract.deploy(
-        client, compilation_source={"contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
+        client, compilation_source={"contracts/cairo/state_verify.cairo"}, search_paths=["contracts"]
         # client, compilation_source={"../contracts/cairo/branch_verify.cairo"}, search_paths=["contracts"]
     )
 
@@ -82,7 +82,7 @@ async def test_get_hash():
     storage_contract_hash = 0
     for contract_iterator in dep_contract_list:
         if contract_iterator["address"] == storage_contract_address:
-            storage_contract_hash = contract_iterator["class_hash"]
+            storage_contract_hash = contract_iterator["contract_hash"]
 
     assert storage_contract_hash != 0, "Contract not found on chain"
 
@@ -132,10 +132,10 @@ async def test_import_branch_suez(test_get_hash: tuple, deploy_verify_contract):
     # leaf_tuple = (leaf[0], leaf[1], leaf[2], leaf[3], leaf[4])
     leaf_dict = {"height": leaf[0], "position": leaf[1],
                  "length": leaf[2], "path": leaf[3], "value": leaf[4]}
-    res_hash = await branch_contract.functions["verify_both_branches"].invoke(leaf=leaf_dict, branch_low=merkle_branch_low_dicts, total_low_len=leaf[0],
-                                                                              root_low_hash=int(storage_root, 16), contract_address=int(storage_contract_address, 16), contract_hash=int(contract_hash, 16),
-                                                                              branch_high=merkle_branch_high_dicts,
-                                                                              total_high_len=total_len, root_high_hash=int(root_hash, 16), max_fee=0)
+    res_hash = await branch_contract.functions["verify_increment"].invoke(leaf=leaf_dict, branch_low=merkle_branch_low_dicts, total_low_len=leaf[0],
+                                                                          root_low_hash=int(storage_root, 16), contract_address=int(storage_contract_address, 16), contract_hash=int(contract_hash, 16),
+                                                                          branch_high=merkle_branch_high_dicts,
+                                                                          total_high_len=total_len, root_high_hash=int(root_hash, 16), max_fee=0)
 
     # root_hash, storage_root, merkle_branch_high, merkle_branch_low = generate_proof(block_num=block_number,
     #                                                                                 contract_address=contract_address, var_name="variable")
