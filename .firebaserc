@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "bridge-app-577e1"
-  }
+    "default": "slush-test-b58c0",
+    "slush": "slush-test-b58c0"
+  },
+  "targets": {}
 }

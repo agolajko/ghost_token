@@ -44,7 +44,7 @@ export function Transfer() {
     [setRoot]
   );
 
-  async function handle_click(storage_var, block_number, state_root) {
+  async function handle_click(block_number, state_root) {
     // first perform the post request 
     // next send the result to the contract
     console.log("works?");
@@ -76,10 +76,10 @@ export function Transfer() {
 
     // const state_root_ = state_root
     const state_root_ = String(BigInt(state_root))
-    const leaf_height = response.merkleb_low[0][0]
+    const leaf_height = String(BigInt(response.merkleb_low[0][0]))
     const leaf_position = String(BigInt(response.merkleb_low[0][1]))
-    const leaf_length = response.merkleb_low[0][2]
-    const leaf_path = response.merkleb_low[0][3]
+    const leaf_length = String(BigInt(response.merkleb_low[0][2]))
+    const leaf_path = String(BigInt(response.merkleb_low[0][3]))
     const leaf_value = String(BigInt(response.merkleb_low[0][4]))
 
     console.log("response.merkleb_low")
@@ -90,13 +90,11 @@ export function Transfer() {
     const root_high_hash = String(BigInt("0x" + response.root_hash))
 
 
-
-
     const merkle_branch_low_dict = []
     const merkle_branch_high_dict = []
 
 
-    for (let i = 1; i <= 249; i++) {
+    for (let i = 1; i <= response.merkleb_low.length - 1; i++) {
       merkle_branch_low_dict.push({
         height: String(BigInt(response.merkleb_low[i]["0"])), position: String(BigInt(response.merkleb_low[i]["1"])),
         length: String(BigInt(response.merkleb_low[i]["2"])), path: String(BigInt(response.merkleb_low[i]["3"])), value: String(BigInt(response.merkleb_low[i]["4"]))
@@ -110,12 +108,12 @@ export function Transfer() {
       })
     }
 
-    const leaf = { height: leaf_height, position: String(BigInt(leaf_position)), length: leaf_length, path: leaf_path, value: String(BigInt(leaf_value)) }
+    const leaf = { height: String(BigInt(leaf_height)), position: String(BigInt(leaf_position)), length: String(BigInt(leaf_length)), path: String(BigInt(leaf_path)), value: String(BigInt(leaf_value)) }
 
     invoke({
       args: [state_root_, leaf,
         merkle_branch_low_dict, root_low_hash, merkle_branch_high_dict, root_high_hash
-      ], metadata: { method: "verify_increment" }
+      ], metadata: { method: "verify_increment" },
     })
 
 
@@ -127,8 +125,8 @@ export function Transfer() {
       <div>
 
         <div className="row">
-          <input onChange={updateStorage} value={storage_var} type="text" placeholder="Value of storage variable" />
-          &nbsp;
+          {/* <input onChange={updateStorage} value={storage_var} type="text" placeholder="Value of storage variable" />
+          &nbsp; */}
           {/*<input onChange={updateAmount} value={amount_low} type="text" />*/}
           <input onChange={updateBlock} value={block_number} type="text" placeholder="Block number" />
           &nbsp;
@@ -137,7 +135,7 @@ export function Transfer() {
 
           <button
             // onClick={() => verify_increment && verify_increment({ 0, 1, 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 })}
-            onClick={() => handle_click(storage_var, block_number, state_root)}
+            onClick={() => handle_click(block_number, state_root)}
           // onClick={() => invoke({ args: ["0x12", "12"], metadata: { method: "initialise" } })}
           // onClick={() => invoke({
           //   // args: [state_root_, leaf_height, leaf_position, leaf_length, leaf_path, leaf_value,

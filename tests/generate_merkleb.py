@@ -7,9 +7,9 @@ import json
 
 def generate_proof(block_num: int, contract_address: int, var_name: str, contract_variables: list):
     # con = sqlite3.connect("goerli.sqlite")
-    # con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
-    con = sqlite3.connect(
-        "/mnt/volume_lon1_01/pathfinder/goerli.sqlite")
+    con = sqlite3.connect("/home/ago/Downloads/goerli.sqlite")
+    # con = sqlite3.connect(
+    # "/mnt/volume_lon1_01/pathfinder/goerli.sqlite")
 
     cur = con.cursor()
     print("hi run")
@@ -94,10 +94,11 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
 
         else:
             # we are at the leaf. The leaf has no data, as the hash is the data itself.
-            if height> 0:
-                merkleb_high.insert( 0, [height, int(b_address[0:height], 2), 0, 0, int(next_hash, 16)])
+            if height > 0:
+                merkleb_high.insert(
+                    0, [height, int(b_address[0:height], 2), 0, 0, int(next_hash, 16)])
             else:
-                    merkleb_high.insert( 0, [height, 0, 0, 0, int(next_hash, 16)])
+                merkleb_high.insert(0, [height, 0, 0, 0, int(next_hash, 16)])
             break
     print("hi run 3")
 
@@ -163,10 +164,9 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
                 other_hash_path = 0
             # if other_hash == ():
                 # in this case we are in a leaf, so nothing changes.
-            
+
             merkleb_low.insert(0, [height_cont, int(b_key[0: height_cont-1]+str(op_bit), 2),
                                    other_hash_length, other_hash_path,  int(str(other_hash), 16)])
-            
 
         elif len(row[0]) == 133:
             # This means we are in an edge node, we have to increase height and traversedpath, but we don't change the merkle branch. We also check we are on the correct path.
@@ -191,7 +191,7 @@ def generate_proof(block_num: int, contract_address: int, var_name: str, contrac
                 merkleb_low.insert(
                     0, [height_cont, int(b_key[0:height_cont], 2), 0, 0, int(next_hash, 16)])
             else:
-                 merkleb_low.insert(
+                merkleb_low.insert(
                     0, [height_cont, 0, 0, 0, int(next_hash, 16)])
             break
 
