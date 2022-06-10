@@ -100,7 +100,7 @@ export function Transfer() {
         length: String(BigInt(response.merkleb_low[i]["2"])), path: String(BigInt(response.merkleb_low[i]["3"])), value: String(BigInt(response.merkleb_low[i]["4"]))
       })
     }
-    for (let i = 0; i <= response.merkleb_high.length - 1; i++) {
+    for (let i = 1; i <= response.merkleb_high.length - 1; i++) {
       // for (let i = 0; i <= 8; i++) {
       merkle_branch_high_dict.push({
         height: String(BigInt(response.merkleb_high[i]["0"])), position: String(BigInt(response.merkleb_high[i]["1"])),
