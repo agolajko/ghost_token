@@ -135,9 +135,9 @@ async def test_core(starknet_ins: Starknet, branch_contract: StarknetContract, t
 
     
 
-    res_hash = await branch_contract.verify_both_branches(leaf=leaf, branch_low=merkle_branch_low_tuple,
+    res_hash = await branch_contract.verify_both_branches(leaf=leaf, branch_low=merkle_branch_low_tuple[1:],
                                                           root_low_hash=int("0x" + storage_root, 16), contract_address=int(contract_address, 16), contract_hash=int("0x" + contract_hash, 16),
-                                                          branch_high=merkle_branch_high_tuple,
+                                                          branch_high=merkle_branch_high_tuple[1:],
                                                           root_high_hash=int("0x" + root_hash, 16)).call()
 
     print(res_hash)
