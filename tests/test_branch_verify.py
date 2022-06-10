@@ -22,7 +22,7 @@ from collections import namedtuple
 # from starkware.starknet.cli.starknet_cli import get_state_update
 from starkware.starknet.cli.starknet_cli import get_feeder_gateway_client
 from starkware.starknet.services.api.feeder_gateway.feeder_gateway_client import FeederGatewayClient
-from services.external_api.base_client import RetryConfig
+from services.external_api.client import RetryConfig
 import json
 
 

@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from starknet_py.contract import Contract
 from starknet_py.net.client import Client
-from services.external_api.base_client import RetryConfig
+from services.external_api.client import RetryConfig
 from starkware.starknet.services.api.feeder_gateway.feeder_gateway_client import FeederGatewayClient
 from starkware.starknet.cli.starknet_cli import get_feeder_gateway_client
 from collections import namedtuple
@@ -82,7 +82,7 @@ async def test_get_hash():
     storage_contract_hash = 0
     for contract_iterator in dep_contract_list:
         if contract_iterator["address"] == storage_contract_address:
-            storage_contract_hash = contract_iterator["contract_hash"]
+            storage_contract_hash = contract_iterator["class_hash"]
 
     assert storage_contract_hash != 0, "Contract not found on chain"
 

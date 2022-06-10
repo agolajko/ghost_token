@@ -88,6 +88,7 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
 
             next_hash = row[0][2: 66]
             path_l = '0x' + row[0][130:132]
+            #sanity check that we are going down the right path
             assert int("0x"+row[0][66:130],
                        16) == int(b_address[height: height+int(path_l, 16)], 2)
             height += int(path_l, 16)

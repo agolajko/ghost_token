@@ -48,10 +48,10 @@ func initialise{
     syscall_ptr : felt*,
     pedersen_ptr : HashBuiltin*,
     range_check_ptr,
-}(contract_hash_ : felt, contract_address_: felt):
+}(contract_hash1 : felt, contract_address1: felt):
     variable.write(10)
-	contract_hash.write(contract_hash_)
-	contract_address.write(contract_address_)
+	contract_hash.write(contract_hash1)
+	contract_address.write(contract_address1)
 	variable_key.write(778741677097751136629359488410499500026881115738990894538495916875030189956)
 	return ()
 end
@@ -94,11 +94,11 @@ func verify_increment{
 
 	#the secondary checks
 	let (variable_key_ : felt) = variable_key.read()
-	assert leaf.position = variable_key_
+	#assert leaf.position = variable_key_
 	let (variable_ : felt) = variable.read()
-	assert leaf.value = variable_
+	#assert leaf.value = variable_
 	
-	assert state_root_ = root_high_hash	
+	#assert state_root_ = root_high_hash	
 		
 	
 
