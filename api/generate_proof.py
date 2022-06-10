@@ -8,7 +8,7 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
     print("contract_address ", contract_address)
     print("var_name ", var_name)
     print("db_path ", db_path)
-    
+
     con = sqlite3.connect(db_path)
 
     cur = con.cursor()
@@ -79,8 +79,10 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
                 other_hash_path = 0
             # if other_hash == ():
                 # in this case we are in a leaf, so nothing changes.
-            merkleb_high.insert(0, [height, int(b_address[0: height-1]+str(op_bit), 2),
-                                other_hash_length, other_hash_path,  int(str(other_hash), 16)])
+            # merkleb_high.insert(0, [height, int(b_address[0: height-1]+str(op_bit), 2),
+            #                     other_hash_length, other_hash_path,  int(str(other_hash), 16)])
+            merkleb_high.insert(0, [str(height), str(int(b_address[0: height-1]+str(op_bit), 2)),
+                                str(other_hash_length), str(other_hash_path),  str(int(str(other_hash), 16))])
 
         elif len(row[0]) == 133:
             # This means we are in an edge node, we have to increase height, but we don't change the merkle branch. We also check we are on the correct path.(we could return 0 instead of breaking)
@@ -88,19 +90,21 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
 
             next_hash = row[0][2: 66]
             path_l = '0x' + row[0][130:132]
-            #sanity check that we are going down the right path
+            # sanity check that we are going down the right path
             assert int("0x"+row[0][66:130],
                        16) == int(b_address[height: height+int(path_l, 16)], 2)
             height += int(path_l, 16)
 
         else:
             # we are at the leaf. The leaf has no data, as the hash is the data itself.
-            if height>0:
+            if height > 0:
                 merkleb_high.insert(
-                    0, [height, int(b_address[0:height], 2), 0, 0, int(next_hash, 16)])
+                    # 0, [height, int(b_address[0:height], 2), 0, 0, int(next_hash, 16)])
+                    0, [str(height), str(int(b_address[0:height], 2)), str(0), str(0), str(int(next_hash, 16))])
             else:
                 merkleb_high.insert(
-                    0, [height, 0, 0, 0, int(next_hash, 16)])
+                    # 0, [height, 0, 0, 0, int(next_hash, 16)])
+                    0, [str(height), str(0), str(0), str(0), str(int(next_hash, 16))])
             break
     print("hi run 3")
 
@@ -108,7 +112,7 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
     for row in cur.execute("SELECT quote(root), quote(hash) FROM contract_states WHERE state_hash =CAST(X'"+next_hash+"' AS BLOB);"):
         # for row in cur.execute("SELECT  quote(root), quote(hash) FROM contract_states WHERE quote(state_hash) LIKE '%" + next_hash + "%';"):
         next_hash = row[0][2:66]
-        
+
         other_hash = row[1][2:66]
         storage_root = next_hash
         break
@@ -165,8 +169,10 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
                 other_hash_path = 0
             # if other_hash == ():
                 # in this case we are in a leaf, so nothing changes.
-            merkleb_low.insert(0, [height_cont, int(b_key[0: height_cont-1]+str(op_bit), 2),
-                                   other_hash_length, other_hash_path,  int(str(other_hash), 16)])
+            # merkleb_low.insert(0, [height_cont, int(b_key[0: height_cont-1]+str(op_bit), 2),
+            #                        other_hash_length, other_hash_path,  int(str(other_hash), 16)])
+            merkleb_low.insert(0, [str(height_cont), str(int(b_key[0: height_cont-1]+str(op_bit), 2)),
+                                   str(other_hash_length), str(other_hash_path),  str(int(str(other_hash), 16))])
 
         elif len(row[0]) == 133:
             # This means we are in an edge node, we have to increase height and traversedpath, but we don't change the merkle branch. We also check we are on the correct path.
@@ -179,12 +185,14 @@ def generate_proof(db_path: str, block_num: int, contract_address: int, var_name
                 "0x"+row[0][66:130], 16) == int(b_key[height_cont: height_cont+int(path_l, 16)], 2)
             height_cont += int(path_l, 16)
         else:
-            if height_cont> 0:
+            if height_cont > 0:
                 merkleb_low.insert(
-                    0, [height_cont, int(b_key[0:height_cont], 2), 0, 0, int(next_hash, 16)])
+                    0, [str(height_cont), str(int(b_key[0:height_cont], 2)), str(0), str(0), str(int(next_hash, 16))])
+                # 0, [height_cont, int(b_key[0:height_cont], 2), 0, 0, int(next_hash, 16)])
             else:
-                 merkleb_low.insert(
-                    0, [height_cont, 0, 0, 0, int(next_hash, 16)])
+                merkleb_low.insert(
+                    0, [str(height_cont), str(0), str(0), str(0), str(int(next_hash, 16))])
+                # 0, [height_cont, 0, 0, 0, int(next_hash, 16)])
             break
 
     con.close

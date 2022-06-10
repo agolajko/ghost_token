@@ -135,6 +135,7 @@ export function Transfer() {
 
           <button
             // onClick={() => verify_increment && verify_increment({ 0, 1, 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 })}
+            // onClick={() => handle_click(String(BigInt(block_number)), String(BigInt(state_root)))}
             onClick={() => handle_click(block_number, state_root)}
           // onClick={() => invoke({ args: ["0x12", "12"], metadata: { method: "initialise" } })}
           // onClick={() => invoke({

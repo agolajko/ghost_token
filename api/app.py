@@ -13,9 +13,11 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 print(f"Starting app DB_PATH={db_path}, PORT={port} ...")
 
+
 @app.route("/live", methods=["GET"])
 def live():
     return jsonify(status="live")
+
 
 @app.route("/generate_proof", methods=["POST"])
 @cross_origin()
@@ -26,19 +28,21 @@ def handle_generate_proof():
     var_name = data.get("variable")
 
     response = None
-    
+
     try:
-        (root_hash, storage_root,  merkleb_high, merkleb_low) = generate_proof(db_path, block_num, contract_address, var_name)
+        (root_hash, storage_root,  merkleb_high, merkleb_low) = generate_proof(
+            db_path, block_num, contract_address, var_name)
         response = jsonify(
-            root_hash=root_hash,
-            storage_root=storage_root,
-            merkleb_high=merkleb_high,
-            merkleb_low=merkleb_low,
+            root_hash=str(root_hash),
+            storage_root=str(storage_root),
+            merkleb_high=str(merkleb_high),
+            merkleb_low=str(merkleb_low),
             error="")
     except AssertionError as e:
         response = jsonify(error=str(e))
-    
+
     return response
 
+
 if __name__ == '__main__':
-      app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port)
