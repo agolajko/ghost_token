@@ -19,17 +19,19 @@ export function Transfer() {
 
   // const transactionStatus = useTransaction(hash);
 
-  const [storage_var, setStorage] = React.useState("");
+  // const [contract_address, setStorage] = React.useState("");
   const [block_number, setBlock] = React.useState("");
   const [state_root, setRoot] = React.useState("");
+  // const [variable_name, setVar] = React.useState("");
+  // const [arg_value, setArg] = React.useState("");
 
   //console.log(setAmount)
-  const updateStorage = React.useCallback(
-    (evt: React.ChangeEvent<HTMLInputElement>) => {
-      setStorage(evt.target.value);
-    },
-    [setStorage]
-  );
+  // const updateStorage = React.useCallback(
+  //   (evt: React.ChangeEvent<HTMLInputElement>) => {
+  //     setStorage(evt.target.value);
+  //   },
+  //   [setStorage]
+  // );
 
   const updateBlock = React.useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,13 +46,27 @@ export function Transfer() {
     [setRoot]
   );
 
+  // const updateVar = React.useCallback(
+  //   (evt: React.ChangeEvent<HTMLInputElement>) => {
+  //     setVar(evt.target.value);
+  //   },
+  //   [setVar]
+  // );
+
+  // const updateArg = React.useCallback(
+  //   (evt: React.ChangeEvent<HTMLInputElement>) => {
+  //     setArg(evt.target.value);
+  //   },
+  //   [setArg]
+  // );
+
+
   async function handle_click(block_number, state_root) {
     // first perform the post request 
     // next send the result to the contract
     console.log("works?");
 
     const send_data = {
-      // "block": "230071",
       "block": block_number,
       "contract": starknetAddress,
       "variable": "variable"
@@ -125,13 +141,17 @@ export function Transfer() {
       <div>
 
         <div className="row">
-          {/* <input onChange={updateStorage} value={storage_var} type="text" placeholder="Value of storage variable" />
+          {/* <input onChange={updateStorage} value={contract_address} type="text" placeholder="Contract address" />
           &nbsp; */}
-          {/*<input onChange={updateAmount} value={amount_low} type="text" />*/}
+          {/* <input onChange={updateAmount} value={amount_low} type="text" /> */}
           <input onChange={updateBlock} value={block_number} type="text" placeholder="Block number" />
           &nbsp;
           <input onChange={updateRoot} value={state_root} type="text" placeholder="State root" />
           &nbsp;
+          {/* <input onChange={updateVar} value={variable_name} type="text" placeholder="Variable name" />
+          &nbsp; */}
+          {/* <input onChange={updateArg} value={arg_value} type="text" placeholder="Arg value" />
+          &nbsp; */}
 
           <button
             // onClick={() => verify_increment && verify_increment({ 0, 1, 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 })}

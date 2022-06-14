@@ -26,12 +26,13 @@ def handle_generate_proof():
     block_num = int(data.get("block"))
     contract_address = int(data.get("contract"), 16)
     var_name = data.get("variable")
+    args = data.get("args")
 
     response = None
 
     try:
         (root_hash, storage_root,  merkleb_high, merkleb_low) = generate_proof(
-            db_path, block_num, contract_address, var_name)
+            db_path, block_num, contract_address, var_name, *args)
         response = jsonify(
             root_hash=str(root_hash),
             storage_root=str(storage_root),

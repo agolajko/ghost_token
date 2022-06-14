@@ -10,6 +10,7 @@ import { StarknetProvider, InjectedConnector } from '@starknet-react/core'
 
 // import { StarknetProvider } from "./providers/StarknetProvider";
 import { Transaction, useStarknetTransactionManager } from '@starknet-react/core'
+import { starknetAddress } from "./addresses";
 
 // do the below lines need to be rewritten?
 // import {
@@ -61,21 +62,26 @@ function App() {
       <ConnectWallet />
       &nbsp; <a href="https://chrome.google.com/webstore/detail/argent-x-starknet-wallet/dlcobpjiigpikoobohmabehhmhfoodbb"><img src="/argentx-button-download.svg" width="200" /></a>
 
+      <h1>Verify a storage variable</h1>
       {<GetBalance contract={currentContract} />}
 
-      <h1>Verify a storage variable</h1>
       <p> This is a proof-of-concept for an inter zkRollup trustless bridge. For now it works "Starknet to Starknet".
-        You can verify the value of a storage variable. Get one of the latest blocks from <a href="https://goerli.voyager.online/blocks"> https://goerli.voyager.online/blocks</a>
+        You can verify the value of a storage variable.
+      </p>
+      <p>
+        Get one of the latest blocks from <a href="https://goerli.voyager.online/blocks"> https://goerli.voyager.online/blocks</a>,
+        input the Block number and State root and you'll be able to verify the current storage value as well as increase it's value by one.
       </p>
 
       {/* <Transfer contract={currentContract} /> */}
       <Transfer />
 
+      <div>
+        &nbsp;
+      </div>
       <div className="rowgrey">
-        Starknet Cairo Contract Address:{" "}
-        {currentContract?.connectedTo && (
-          <VoyagerLink.Contract contract={currentContract?.connectedTo} />
-        )}
+        Starknet Contract Address: {starknetAddress}
+
       </div>
 
     </div>

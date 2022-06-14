@@ -98,7 +98,7 @@ func verify_increment{
 	let (variable_ : felt) = variable.read()
 	#assert leaf.value = variable_
 	
-	#assert state_root_ = root_high_hash	
+	assert state_root_ = root_high_hash	
 		
 	
 
